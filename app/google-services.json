@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "29101812611",
+    "firebase_url": "https://videocallapplication.firebaseio.com",
+    "project_id": "videocallapplication",
+    "storage_bucket": "videocallapplication.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29101812611:android:41f28bf154a441dda324b6",
+        "android_client_info": {
+          "package_name": "com.example.mcfinalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "29101812611-o4qtqb9gqlq0319s2k70qork36f7o85r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mcfinalproject",
+            "certificate_hash": "1e6f04ef1fd19b5e9024b3373c3eed59547168c6"
+          }
+        },
+        {
+          "client_id": "29101812611-epuaevcqtf36a2lj3k8t87ntu3mbihjt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1W3KZcug1ifV7k_h2m14xVSbHXR0rESc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "29101812611-epuaevcqtf36a2lj3k8t87ntu3mbihjt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29101812611:android:615ac67f9834440ba324b6",
+        "android_client_info": {
+          "package_name": "com.example.videocallapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "29101812611-igghf19dg4iejfbq2dfndivanq3t1uq6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.videocallapplication",
+            "certificate_hash": "1e6f04ef1fd19b5e9024b3373c3eed59547168c6"
+          }
+        },
+        {
+          "client_id": "29101812611-epuaevcqtf36a2lj3k8t87ntu3mbihjt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1W3KZcug1ifV7k_h2m14xVSbHXR0rESc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "29101812611-epuaevcqtf36a2lj3k8t87ntu3mbihjt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

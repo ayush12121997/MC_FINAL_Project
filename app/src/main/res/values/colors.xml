@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="TheRightPurple">#7719fa</color>
+    <color name="TheRightRed">#fa193b</color>
+    <color name="TheRightBrown">#290000</color>
+    <color name="TheRightOrange">#ff8400</color>
+    <color name="RealMagenta">#bf0a3d</color>
+    <color name="TheRightGrey">#424242</color>
+    <color name="ElectricBlue">#006280</color>
+</resources>
