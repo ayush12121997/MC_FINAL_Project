@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,7 +53,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
             {
                 String value = dataSnapshot.getKey();
-                if(!value.equals("Num_Users"))
+                if(!value.equals("Num_Users") && !value.equals("Num_Projects"))
                 {
                     String name = dataSnapshot.child("Username").getValue(String.class);
                     if(!name.equals(user))
@@ -140,7 +139,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                     ShowBusy();
                                     return;
                                 }
-                                Log.i("LOLOLOLOL", "I am here 1");
                                 mDatabase.getRoot().child("Call_User").child("User_" + userID).setValue("User_" + String.valueOf(position));
                                 mDatabase.getRoot().child("Recieve_User").child("User_" + String.valueOf(position)).setValue("User_" + userID);
                                 MakeCall(new FirebaseCallback()
@@ -156,7 +154,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError)
                             {
-
                             }
                         });
                     }
@@ -169,7 +166,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError)
                 {
-
                 }
             });
         }
@@ -199,7 +195,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                     ShowBusy();
                                     return;
                                 }
-                                Log.i("LOLOLOLOL", "I am here 2");
                                 mDatabase.getRoot().child("Call_User").child("User_" + userID).setValue("User_" + String.valueOf(position + 1));
                                 mDatabase.getRoot().child("Recieve_User").child("User_" + String.valueOf(position + 1)).setValue("User_" + userID);
                                 MakeCall(new FirebaseCallback()
@@ -215,7 +210,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError)
                             {
-
                             }
                         });
                     }
@@ -228,7 +222,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError)
                 {
-
                 }
             });
         }
@@ -241,38 +234,51 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
 
     public void MakeCall(FirebaseCallback fbcb)
     {
-        update = false;
-        for(int i = 1; i < 5; i++)
+        mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
         {
-            String num = String.valueOf(i);
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-            mDatabase = mDatabase.child("Connections").child("Proj_" + num);
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                String number = dataSnapshot.getValue().toString();
+                update = false;
+                for(int i = 1; i <= Integer.parseInt(number); i++)
                 {
-                    String check = dataSnapshot.child("User_1").getValue().toString();
-                    //Log.i("LOL2", check);
-                    if(check.equals("None"))
+                    String num = String.valueOf(i);
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    mDatabase = mDatabase.child("Connections").child("Proj_" + num);
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                     {
-                        if(update)
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                         {
-                            return;
+                            String check = dataSnapshot.child("User_1").getValue().toString();
+                            if(check.equals("None"))
+                            {
+                                if(update)
+                                {
+                                    return;
+                                }
+                                update = true;
+                                mDatabase.getRoot().child("Connections").child("Proj_" + num).child("User_1").setValue("User_" + userID);
+                                fbcb.onCallback(Integer.parseInt(num));
+                            }
                         }
-                        update = true;
-                        mDatabase.getRoot().child("Connections").child("Proj_" + num).child("User_1").setValue("User_" + userID);
-                        fbcb.onCallback(Integer.parseInt(num));
-                    }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError)
-                {
-
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError)
+                        {
+                        }
+                    });
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+            }
+        });
+
     }
 
     public void CreateCallIntent(int i)
@@ -314,16 +320,13 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                Log.i("LOLcallFrom", userID);
                 String callFrom = dataSnapshot.child("User_" + userID).getValue().toString();
-                Log.i("LOLcallFrom", callFrom);
                 fbcb2.onCallback(callFrom);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError)
             {
-
             }
         });
     }
@@ -372,28 +375,42 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                 {
                     OtherID = callFrom.substring(5);
                 }
-                mDatabase = mDatabase.getRoot().child("Connections");
+                mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                 {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                     {
-                        for(int i = 1; i < 5; i++)
+                        String number = dataSnapshot.getValue().toString();
+                        mDatabase = mDatabase.getRoot().child("Connections");
+                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                         {
-                            String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
-                            if(check.equals(callFrom))
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                             {
-                                mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("User_" + userID);
-                                ConnectCallIntent(i);
-                                break;
+                                for(int i = 1; i <= Integer.parseInt(number); i++)
+                                {
+                                    String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
+                                    if(check.equals(callFrom))
+                                    {
+                                        mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("User_" + userID);
+                                        ConnectCallIntent(i);
+                                        break;
+                                    }
+                                }
                             }
-                        }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError)
+                            {
+                            }
+                        });
+
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError)
                     {
-
                     }
                 });
             }
@@ -401,7 +418,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError)
             {
-
             }
         });
     }
@@ -416,29 +432,42 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             {
                 String callFrom = dataSnapshot.getValue().toString();
                 mDatabase.getRoot().child("Call_User").child(callFrom).setValue("None");
-                mDatabase = mDatabase.getRoot().child("Connections");
+                mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                 {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                     {
-                        for(int i = 1; i < 5; i++)
+                        String number = dataSnapshot.getValue().toString();
+                        mDatabase = mDatabase.getRoot().child("Connections");
+                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                         {
-                            String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
-                            if(check.equals(callFrom))
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                             {
-                                mDatabase.child("Proj_" + String.valueOf(i)).child("User_1").setValue("None");
-                                mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("None");
-                                mDatabase.getRoot().child("Recieve_User").child("User_" + userID).setValue("None");
-                                break;
+                                for(int i = 1; i <= Integer.parseInt(number); i++)
+                                {
+                                    String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
+                                    if(check.equals(callFrom))
+                                    {
+                                        mDatabase.child("Proj_" + String.valueOf(i)).child("User_1").setValue("None");
+                                        mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("None");
+                                        mDatabase.getRoot().child("Recieve_User").child("User_" + userID).setValue("None");
+                                        break;
+                                    }
+                                }
                             }
-                        }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError)
+                            {
+                            }
+                        });
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError)
                     {
-
                     }
                 });
             }
@@ -446,7 +475,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError)
             {
-
             }
         });
 

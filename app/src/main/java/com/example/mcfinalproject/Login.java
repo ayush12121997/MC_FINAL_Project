@@ -2,12 +2,16 @@ package com.example.mcfinalproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +26,7 @@ public class Login extends AppCompatActivity
     private EditText Password;
     private DatabaseReference mDatabase;
     private boolean check = true;
+    private static final int RC_VIDEO_APP_PERM = 124;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,6 +38,22 @@ public class Login extends AppCompatActivity
         Password = (EditText) findViewById(R.id.EDT2);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        requestPermissions();
+    }
+
+    @AfterPermissionGranted(RC_VIDEO_APP_PERM)
+    private void requestPermissions()
+    {
+        String[] perms = {Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
+        if(EasyPermissions.hasPermissions(this, perms))
+        {
+            // initialize view objects from your layout
+        }
+        else
+        {
+            EasyPermissions.requestPermissions(this, "This app needs access to your camera and mic to make video calls", RC_VIDEO_APP_PERM, perms);
+        }
     }
 
     public void Autheticate_Login(View view)
@@ -107,5 +128,6 @@ public class Login extends AppCompatActivity
     {
         Intent Intent3 = new Intent(getApplicationContext(), RegistrationScreen.class);
         startActivity(Intent3);
+        finish();
     }
 }
