@@ -52,6 +52,10 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     private String Proj = "";
     private String user;
     private String userID;
+    private CanvasViewClient canvasView;
+    private CanvasViewServer canvasView2;
+    private Button but;
+    private Button but2;
 
 //    public void makeConnection2()
 //    {
@@ -72,6 +76,12 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         Proj = intent.getStringExtra("Proj_ID");
         user = intent.getStringExtra("User");
         userID = intent.getStringExtra("UserID");
+        Log.i("CheckUser", userID);
+        but2 = (Button)findViewById(R.id.button);
+        canvasView = (CanvasViewClient)findViewById(R.id.canvas);
+        canvasView2 = (CanvasViewServer)findViewById(R.id.canvas2);
+
+        but = (Button)findViewById(R.id.button2);
         connectCall();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Call_User").child(Call_From);
         mDatabase.addValueEventListener(new ValueEventListener()
@@ -93,7 +103,26 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 
             }
         });
+        but.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("HelloCheck", "ASASASAS");
+                Log.i("LOLOLOLOLOL", canvasView.pl);
+                mDatabase.getRoot().child("Connections").child("Proj_1").child("CanvasDraw").setValue(canvasView.pl);
+
+            }
+        });
+        but2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canvasView.clearCanvas();
+                canvasView.pl = "Noneee";
+                mDatabase.getRoot().child("Connections").child("Proj_1").child("CanvasDraw").setValue(canvasView.pl);
+
+            }
+        });
 //        makeConnection2();
+        checkDrawing();
     }
 
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
@@ -214,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 
         if(mPublisher.getView() instanceof GLSurfaceView)
         {
-            ((GLSurfaceView) mPublisher.getView()).setZOrderOnTop(true);
+//            ((GLSurfaceView) mPublisher.getView()).setZOrderOnTop(false);
         }
 
         mSession.publish(mPublisher);
@@ -273,5 +302,50 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void onError(PublisherKit publisherKit, OpentokError opentokError)
     {
 
+    }
+
+    public void getDrawing(FirebaseCallback2 fbcb2)
+    {
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = mDatabase.getRoot().child("Connections").child("Proj_1").child("CanvasDraw");
+        mDatabase.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                String rec = dataSnapshot.getValue().toString();
+                if(!rec.equals("Noneee"))
+                {
+                    fbcb2.onCallback2(rec);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
+    }
+
+    private interface FirebaseCallback2
+    {
+        void onCallback2(String rekt);
+    }
+
+    public void checkDrawing()
+    {
+        getDrawing(new FirebaseCallback2()
+        {
+            @Override
+            public void onCallback2(String rekt)
+            {
+                if(userID.equals("1"))
+                {
+                    Log.i("Get drawing", rekt);
+                    canvasView2.updateCanvas(rekt);
+                }
+            }
+        });
     }
 }

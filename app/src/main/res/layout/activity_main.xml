@@ -11,80 +11,91 @@
         android:id="@+id/buttonDisconnect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
-        android:layout_marginEnd="151dp"
-        android:layout_marginStart="151dp"
-        android:layout_marginTop="54dp"
-        android:text="Disconnect"
         android:onClick="disconnect"
+        android:text="Disconnect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.99"/>
+        app:layout_constraintVertical_bias="0.83" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CLEAR CANVAS"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.91" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send Shape"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.99" />
 
     <FrameLayout
-        android:id="@+id/publisher_container"
-        android:layout_width="210dp"
-        android:layout_height="280dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="#FFFFFF"
-        android:padding="2dp"
+        android:id="@+id/frameLayout2"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.82"/>
+        app:layout_constraintVertical_bias="0.6">
+
+        <FrameLayout
+            android:id="@+id/subscriber_container"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/common_google_signin_btn_text_dark_focused" />
+
+        <com.example.mcfinalproject.CanvasViewClient
+            android:id="@+id/canvas"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/subscriber_container"
-        android:layout_width="210dp"
-        android:layout_height="280dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/common_google_signin_btn_text_dark_focused"
-        android:padding="2dp"
+        android:id="@+id/frameLayout3"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05"/>
+        app:layout_constraintVertical_bias="0.05">
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/frameLayout"-->
-<!--        android:layout_width="360dp"-->
-<!--        android:layout_height="480dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.5"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.3">-->
+        <FrameLayout
+            android:id="@+id/publisher_container"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/common_google_signin_btn_text_dark_focused">
 
-<!--        <FrameLayout-->
-<!--            android:id="@+id/subscriber_container"-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="fill_parent"-->
-<!--            android:background="@color/common_google_signin_btn_text_dark_focused" />-->
+        </FrameLayout>
 
-<!--        <FrameLayout-->
-<!--            android:id="@+id/publisher_container"-->
-<!--            android:layout_width="180dp"-->
-<!--            android:layout_height="240dp"-->
-<!--            android:layout_gravity="bottom|end"-->
-<!--            android:layout_marginBottom="16dp"-->
-<!--            android:layout_marginEnd="16dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            android:background="#FFFFFF"-->
-<!--            android:padding="2dp" />-->
-<!--    </FrameLayout>-->
+        <com.example.mcfinalproject.CanvasViewServer
+            android:id="@+id/canvas2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.example.mcfinalproject.CanvasViewServer
+            android:id="@+id/canvas3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
