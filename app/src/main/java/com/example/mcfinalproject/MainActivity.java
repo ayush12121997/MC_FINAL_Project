@@ -53,6 +53,13 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     private String user;
     private String userID;
 
+//    public void makeConnection2()
+//    {
+//        mSession = new Session.Builder(this, "46430082", "2_MX40NjQzMDA4Mn5-MTU3MjI2OTQ1ODQzOX55ZHFLVGZJVVdCUGMzUk4xcVpDeUc2dEV-fg").build();
+//        mSession.setSessionListener(this);
+//        mSession.connect("T1==cGFydG5lcl9pZD00NjQzMDA4MiZzaWc9ZmRhYmY5NTg0MjZmMDM2NmM5NjM2ZGZhOWQ3YTg4NjBiMTBmNTJmZDpzZXNzaW9uX2lkPTJfTVg0ME5qUXpNREE0TW41LU1UVTNNakkyT1RRMU9EUXpPWDU1WkhGTFZHWkpWVmRDVUdNelVrNHhjVnBEZVVjMmRFVi1mZyZjcmVhdGVfdGltZT0xNTcyMjY5NDg0Jm5vbmNlPTAuNzY1ODkwMDIxOTc1NzY1MiZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTc0ODY1MDgzJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9");
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -86,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 
             }
         });
+//        makeConnection2();
     }
 
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
