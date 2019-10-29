@@ -104,6 +104,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                         public void onCallback(String i)
                         {
                             updateText(i);
+                            ConnectCallIntent(1);
                         }
                     }, i.substring(5));
                 }
@@ -297,7 +298,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
 
     public void ConnectCallIntent(int i)
     {
-        Intent intent = new Intent();
+        Intent intent = new Intent(getApplicationContext(),IncomingCall.class);
         intent.setClass(this, MainActivity.class);
         intent.putExtra("CallTo", "User_" + userID);
         intent.putExtra("CallFrom", "User_" + OtherID);

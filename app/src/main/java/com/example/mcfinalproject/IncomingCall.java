@@ -11,10 +11,26 @@ import android.widget.Button;
 
 public class IncomingCall extends AppCompatActivity {
 
+    String user;
+    String userID;
+    String Call_To;
+    String Call_From;
+    String Proj_ID;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incoming_call);
+
+        Intent intent = getIntent();
+        Call_From = intent.getStringExtra("CallFrom");
+        Call_To = intent.getStringExtra("CallTo");
+        Proj_ID = intent.getStringExtra("Proj_ID");
+        user = intent.getStringExtra("User");
+        userID = intent.getStringExtra("UserID");
+
+
 
         Button Accept_Button=findViewById(R.id.button3);
         Button Decline_Button=findViewById(R.id.button4);
@@ -44,6 +60,12 @@ public class IncomingCall extends AppCompatActivity {
 
     public void ACCEPT_KALL(View view){
         Intent AcceptCallIntent=new Intent(getApplicationContext(),MainActivity.class);
+        AcceptCallIntent.setClass(this, MainActivity.class);
+        AcceptCallIntent.putExtra("CallTo",  Call_To);
+        AcceptCallIntent.putExtra("CallFrom",  Call_From);
+        AcceptCallIntent.putExtra("Proj_ID",Proj_ID);
+        AcceptCallIntent.putExtra("User", user);
+        AcceptCallIntent.putExtra("UserID", userID);
         startActivity(AcceptCallIntent);
     }
 
