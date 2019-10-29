@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
+                Log.i("FUCK THIS SHIT", Call_From);
                 String check = dataSnapshot.getValue().toString();
                 if(check.equals("None"))
                 {

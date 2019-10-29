@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
     private String userID;
     private String OtherID = "";
     private boolean update = false;
+    private boolean update2 = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -103,131 +105,120 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                         @Override
                         public void onCallback(String i)
                         {
-                            updateText(i);
-                            ConnectCallIntent(1);
+                            Button btn = (Button) findViewById(R.id.Connect_Button);
+                            btn.performClick();
                         }
                     }, i.substring(5));
                 }
             }
         });
-
         Users_List.setOnItemClickListener(this);
     }
 
     public void onItemClick(AdapterView<?> L, View v, int position, long id)
     {
-        if(position < Integer.parseInt(userID))
+        String name = Friends.get(position);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Num_Users");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
         {
-            mDatabase = mDatabase.getRoot();
-            mDatabase = mDatabase.child("Call_User").child("User_" + String.valueOf(position));
-            OtherID = String.valueOf(position);
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                String number = dataSnapshot.getValue().toString();
+                Log.i("I am here now", number);
+                update2 = false;
+                for(int i = 0; i < Integer.parseInt(number); i++)
                 {
-                    String check = dataSnapshot.getValue().toString();
-                    if(check.equals("None"))
+                    String num = String.valueOf(i);
+                    Log.i("I am here now 2", num);
+                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                    mDatabase = mDatabase.child("Users").child("User_" + num);
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                     {
-                        mDatabase = mDatabase.getRoot();
-                        mDatabase = mDatabase.child("Recieve_User").child("User_" + String.valueOf(position));
-                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                         {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                            String name2 = dataSnapshot.child("Username").getValue().toString();
+                            if(name.equals(name2))
                             {
-                                String check = dataSnapshot.getValue().toString();
-                                if(!check.equals("None"))
+                                if(update2)
                                 {
-                                    ShowBusy();
                                     return;
                                 }
-                                mDatabase.getRoot().child("Call_User").child("User_" + userID).setValue("User_" + String.valueOf(position));
-                                mDatabase.getRoot().child("Recieve_User").child("User_" + String.valueOf(position)).setValue("User_" + userID);
-                                MakeCall(new FirebaseCallback()
+                                else
+                                {
+                                    update2 = true;
+                                }
+                                OtherID = dataSnapshot.getKey().toString();
+                                mDatabase = mDatabase.getRoot();
+                                mDatabase = mDatabase.child("Call_User").child(OtherID);
+                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                                 {
                                     @Override
-                                    public void onCallback(int i)
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                                     {
-                                        CreateCallIntent(i);
+                                        String check = dataSnapshot.getValue().toString();
+                                        if(check.equals("None"))
+                                        {
+                                            mDatabase = mDatabase.getRoot();
+                                            mDatabase = mDatabase.child("Recieve_User").child(OtherID);
+                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                                            {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                                                {
+                                                    String check = dataSnapshot.getValue().toString();
+                                                    if(!check.equals("None"))
+                                                    {
+                                                        ShowBusy();
+                                                        return;
+                                                    }
+                                                    mDatabase.getRoot().child("Call_User").child("User_" + userID).setValue(OtherID);
+                                                    mDatabase.getRoot().child("Recieve_User").child(OtherID).setValue("User_" + userID);
+                                                    MakeCall(new FirebaseCallback()
+                                                    {
+                                                        @Override
+                                                        public void onCallback(int i)
+                                                        {
+                                                            CreateCallIntent(i);
+                                                        }
+                                                    });
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError)
+                                                {
+                                                }
+                                            });
+                                        }
+                                        else
+                                        {
+                                            ShowBusy();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError)
+                                    {
                                     }
                                 });
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError)
-                            {
-                            }
-                        });
-                    }
-                    else
-                    {
-                        ShowBusy();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError)
-                {
-                }
-            });
-        }
-        else
-        {
-            mDatabase = mDatabase.getRoot();
-            mDatabase = mDatabase.child("Call_User").child("User_" + String.valueOf(position + 1));
-            OtherID = String.valueOf(position + 1);
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-            {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                {
-                    String check = dataSnapshot.getValue().toString();
-                    if(check.equals("None"))
-                    {
-                        mDatabase = mDatabase.getRoot();
-                        mDatabase = mDatabase.child("Recieve_User").child("User_" + String.valueOf(position + 1));
-                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError)
                         {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                            {
-                                String check = dataSnapshot.getValue().toString();
-                                if(!check.equals("None"))
-                                {
-                                    ShowBusy();
-                                    return;
-                                }
-                                mDatabase.getRoot().child("Call_User").child("User_" + userID).setValue("User_" + String.valueOf(position + 1));
-                                mDatabase.getRoot().child("Recieve_User").child("User_" + String.valueOf(position + 1)).setValue("User_" + userID);
-                                MakeCall(new FirebaseCallback()
-                                {
-                                    @Override
-                                    public void onCallback(int i)
-                                    {
-                                        CreateCallIntent(i);
-                                    }
-                                });
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError)
-                            {
-                            }
-                        });
-                    }
-                    else
-                    {
-                        ShowBusy();
-                    }
+                        }
+                    });
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError)
-                {
-                }
-            });
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
     }
 
     public void ShowBusy()
@@ -299,7 +290,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
     public void ConnectCallIntent(int i)
     {
         Intent intent = new Intent(getApplicationContext(),IncomingCall.class);
-        intent.setClass(this, MainActivity.class);
         intent.putExtra("CallTo", "User_" + userID);
         intent.putExtra("CallFrom", "User_" + OtherID);
         intent.putExtra("Proj_ID", "Proj_" + String.valueOf(i));
@@ -390,6 +380,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
 
     public void Start_Video_Call(View view)
     {
+        Log.i("I CAME HERE", "FUCK THIS_1");
         mDatabase = mDatabase.getRoot();
         mDatabase = mDatabase.child("Recieve_User").child("User_" + userID);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
@@ -398,6 +389,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 String callFrom = dataSnapshot.getValue().toString();
+                Log.i("I CAME HERE", "FUCK THIS_2 " + callFrom);
                 if(!callFrom.equals("None"))
                 {
                     OtherID = callFrom.substring(5);
@@ -418,9 +410,11 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                 for(int i = 1; i <= Integer.parseInt(number); i++)
                                 {
                                     String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
+                                    Log.i("I CAME HERE", "FUCK THIS NIGGA " + callFrom + " " + check);
                                     if(check.equals(callFrom))
                                     {
                                         mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("User_" + userID);
+                                        Log.i("I CAME HERE", "FUCK THIS");
                                         ConnectCallIntent(i);
                                         break;
                                     }
@@ -432,7 +426,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                             {
                             }
                         });
-
                     }
 
                     @Override
