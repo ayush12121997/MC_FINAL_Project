@@ -56,13 +56,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     private CanvasViewServer canvasView2;
     private Button but;
     private Button but2;
-
-//    public void makeConnection2()
-//    {
-//        mSession = new Session.Builder(this, "46430082", "2_MX40NjQzMDA4Mn5-MTU3MjI2OTQ1ODQzOX55ZHFLVGZJVVdCUGMzUk4xcVpDeUc2dEV-fg").build();
-//        mSession.setSessionListener(this);
-//        mSession.connect("T1==cGFydG5lcl9pZD00NjQzMDA4MiZzaWc9ZmRhYmY5NTg0MjZmMDM2NmM5NjM2ZGZhOWQ3YTg4NjBiMTBmNTJmZDpzZXNzaW9uX2lkPTJfTVg0ME5qUXpNREE0TW41LU1UVTNNakkyT1RRMU9EUXpPWDU1WkhGTFZHWkpWVmRDVUdNelVrNHhjVnBEZVVjMmRFVi1mZyZjcmVhdGVfdGltZT0xNTcyMjY5NDg0Jm5vbmNlPTAuNzY1ODkwMDIxOTc1NzY1MiZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTc0ODY1MDgzJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9");
-//    }
+    private boolean numAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,10 +71,13 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         user = intent.getStringExtra("User");
         userID = intent.getStringExtra("UserID");
         Log.i("CheckUser", userID);
+        Log.i("CheckCallFrom", Call_From);
+        Log.i("CheckCallTo", Call_To);
+        Log.i("CheckProj", Proj);
         but2 = (Button)findViewById(R.id.button);
         canvasView = (CanvasViewClient)findViewById(R.id.canvas);
         canvasView2 = (CanvasViewServer)findViewById(R.id.canvas2);
-
+        numAnim = true;
         but = (Button)findViewById(R.id.button2);
         connectCall();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Call_User").child(Call_From);
@@ -106,22 +103,18 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         but.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("HelloCheck", "ASASASAS");
-                Log.i("LOLOLOLOLOL", canvasView.pl);
                 mDatabase.getRoot().child("Connections").child("Proj_1").child("CanvasDraw").setValue(canvasView.pl);
-
             }
         });
         but2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 canvasView.clearCanvas();
-                canvasView.pl = "Noneee";
+                canvasView.pl = "None";
                 mDatabase.getRoot().child("Connections").child("Proj_1").child("CanvasDraw").setValue(canvasView.pl);
-
+//                makeAnim();
             }
         });
-//        makeConnection2();
         checkDrawing();
     }
 
@@ -178,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 API_KEY = API;
                 SESSION_ID = SESSION;
                 TOKEN = token;
-                Log.i("CHECK_LOL", API_KEY);
                 makeConnection();
             }
         });
@@ -314,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 String rec = dataSnapshot.getValue().toString();
-                if(!rec.equals("Noneee"))
+                if(!rec.equals("None"))
                 {
                     fbcb2.onCallback2(rec);
                 }
@@ -347,5 +339,24 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 }
             }
         });
+    }
+
+    public void makeAnim()
+    {
+        if(numAnim)
+        {
+            FrameLayout upper = findViewById(R.id.frameLayout2);
+            upper.animate().translationYBy(-840).setDuration(1000);
+            FrameLayout lower = findViewById(R.id.frameLayout3);
+            lower.animate().translationYBy(840).setDuration(1000);
+        }
+        else
+        {
+            FrameLayout upper = findViewById(R.id.frameLayout2);
+            upper.animate().translationYBy(840).setDuration(1000);
+            FrameLayout lower = findViewById(R.id.frameLayout3);
+            lower.animate().translationYBy(-840).setDuration(1000);
+        }
+        numAnim = !numAnim;
     }
 }

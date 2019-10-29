@@ -39,14 +39,16 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        Friends = new ArrayList<>();
-        Users_List = findViewById(R.id.Other_Users_List);
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         Intent intent = getIntent();
         user = intent.getStringExtra("Username");
         userID = intent.getStringExtra("UserID");
+
+        Friends = new ArrayList<>();
+        Users_List = findViewById(R.id.Other_Users_List);
         final ArrayAdapter<String> AdtArr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Friends);
         Users_List.setAdapter(AdtArr);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mDatabase.addChildEventListener(new ChildEventListener()
         {
             @Override
@@ -96,14 +98,14 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                 }
                 else
                 {
-                    if(Integer.parseInt(i.substring(5)) < Integer.parseInt(userID))
+                    getCallerName(new FirebaseCallback3()
                     {
-                        updateText(Friends.get(Integer.parseInt(i.substring(5))));
-                    }
-                    else
-                    {
-                        updateText(Friends.get(Integer.parseInt(i.substring(5)) - 1));
-                    }
+                        @Override
+                        public void onCallback(String i)
+                        {
+                            updateText(i);
+                        }
+                    }, i.substring(5));
                 }
             }
         });
@@ -278,7 +280,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             {
             }
         });
-
     }
 
     public void CreateCallIntent(int i)
@@ -332,6 +333,31 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
     }
 
     private interface FirebaseCallback2
+    {
+        void onCallback(String i);
+    }
+
+    public void getCallerName(FirebaseCallback3 fbcb3, String s)
+    {
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                String name = dataSnapshot.child("User_" + s).child("Username").getValue().toString();
+                fbcb3.onCallback(name);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
+    }
+
+    private interface FirebaseCallback3
     {
         void onCallback(String i);
     }
