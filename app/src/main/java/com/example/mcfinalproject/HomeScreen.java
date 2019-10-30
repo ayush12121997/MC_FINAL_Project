@@ -4,15 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -26,14 +23,13 @@ import java.util.ArrayList;
 
 public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemClickListener
 {
-    private ListView Users_List;
+    private ListView friendsList;
     private DatabaseReference mDatabase;
-    private ArrayList<String> Friends;
-    private String user;
+    private ArrayList<String> friends;
     private String userID;
-    private String OtherID = "";
-    private boolean update = false;
-    private boolean update2 = false;
+    private String otherID;
+    private boolean update;
+    private boolean update2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -42,13 +38,14 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         setContentView(R.layout.activity_home_screen);
 
         Intent intent = getIntent();
-        user = intent.getStringExtra("Username");
         userID = intent.getStringExtra("UserID");
-
-        Friends = new ArrayList<>();
-        Users_List = findViewById(R.id.Other_Users_List);
-        final ArrayAdapter<String> AdtArr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Friends);
-        Users_List.setAdapter(AdtArr);
+        otherID = "";
+        update = false;
+        update2 = false;
+        friends = new ArrayList<>();
+        friendsList = findViewById(R.id.Friends_List);
+        final ArrayAdapter<String> AdtArr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friends);
+        friendsList.setAdapter(AdtArr);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mDatabase.addChildEventListener(new ChildEventListener()
@@ -60,11 +57,8 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                 if(!value.equals("Num_Users") && !value.equals("Num_Projects"))
                 {
                     String name = dataSnapshot.child("Username").getValue(String.class);
-                    if(!name.equals(user))
-                    {
-                        Friends.add(name);
-                        AdtArr.notifyDataSetChanged();
-                    }
+                    friends.add(name);
+                    AdtArr.notifyDataSetChanged();
                 }
             }
 
@@ -94,30 +88,25 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             @Override
             public void onCallback(String i)
             {
-                if(i.equals("None"))
-                {
-                    updateText(i);
-                }
-                else
+                if(!i.equals("None"))
                 {
                     getCallerName(new FirebaseCallback3()
                     {
                         @Override
-                        public void onCallback(String i)
+                        public void onCallback(String name)
                         {
-                            Button btn = (Button) findViewById(R.id.Connect_Button);
-                            btn.performClick();
+                            getCallIntent(name);
                         }
-                    }, i.substring(5));
+                    }, i);
                 }
             }
         });
-        Users_List.setOnItemClickListener(this);
+        friendsList.setOnItemClickListener(this);
     }
 
     public void onItemClick(AdapterView<?> L, View v, int position, long id)
     {
-        String name = Friends.get(position);
+        String name = friends.get(position);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Num_Users");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
         {
@@ -125,12 +114,10 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 String number = dataSnapshot.getValue().toString();
-                Log.i("I am here now", number);
                 update2 = false;
                 for(int i = 0; i < Integer.parseInt(number); i++)
                 {
                     String num = String.valueOf(i);
-                    Log.i("I am here now 2", num);
                     mDatabase = FirebaseDatabase.getInstance().getReference();
                     mDatabase = mDatabase.child("Users").child("User_" + num);
                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
@@ -138,8 +125,8 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                         {
-                            String name2 = dataSnapshot.child("Username").getValue().toString();
-                            if(name.equals(name2))
+                            String otherName = dataSnapshot.child("Username").getValue().toString();
+                            if(name.equals(otherName))
                             {
                                 if(update2)
                                 {
@@ -149,9 +136,9 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                 {
                                     update2 = true;
                                 }
-                                OtherID = dataSnapshot.getKey().toString();
+                                otherID = dataSnapshot.getKey();
                                 mDatabase = mDatabase.getRoot();
-                                mDatabase = mDatabase.child("Call_User").child(OtherID);
+                                mDatabase = mDatabase.child("Call_User").child(otherID);
                                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                                 {
                                     @Override
@@ -161,7 +148,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                         if(check.equals("None"))
                                         {
                                             mDatabase = mDatabase.getRoot();
-                                            mDatabase = mDatabase.child("Recieve_User").child(OtherID);
+                                            mDatabase = mDatabase.child("Recieve_User").child(otherID);
                                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                                             {
                                                 @Override
@@ -173,14 +160,14 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                                         ShowBusy();
                                                         return;
                                                     }
-                                                    mDatabase.getRoot().child("Call_User").child("User_" + userID).setValue(OtherID);
-                                                    mDatabase.getRoot().child("Recieve_User").child(OtherID).setValue("User_" + userID);
+                                                    mDatabase.getRoot().child("Call_User").child(userID).setValue(otherID);
+                                                    mDatabase.getRoot().child("Recieve_User").child(otherID).setValue(userID);
                                                     MakeCall(new FirebaseCallback()
                                                     {
                                                         @Override
                                                         public void onCallback(int i)
                                                         {
-                                                            CreateCallIntent(i);
+                                                            makeCallIntent(i);
                                                         }
                                                     });
                                                 }
@@ -204,10 +191,10 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                 });
                             }
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError)
                         {
-
                         }
                     });
                 }
@@ -216,7 +203,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError)
             {
-
             }
         });
     }
@@ -254,7 +240,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                     return;
                                 }
                                 update = true;
-                                mDatabase.getRoot().child("Connections").child("Proj_" + num).child("User_1").setValue("User_" + userID);
+                                mDatabase.getRoot().child("Connections").child("Proj_" + num).child("User_1").setValue(userID);
                                 fbcb.onCallback(Integer.parseInt(num));
                             }
                         }
@@ -274,26 +260,23 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         });
     }
 
-    public void CreateCallIntent(int i)
+    public void makeCallIntent(int i)
     {
         Intent intent = new Intent();
         intent.setClass(this, MainActivity.class);
-        intent.putExtra("CallFrom", "User_" + userID);
-        intent.putExtra("CallTo", "User_" + OtherID);
+        intent.putExtra("CallFrom", userID);
+        intent.putExtra("CallTo", otherID);
         intent.putExtra("Proj_ID", "Proj_" + String.valueOf(i));
-        intent.putExtra("User", user);
         intent.putExtra("UserID", userID);
         startActivity(intent);
         finish();
     }
 
-    public void ConnectCallIntent(int i)
+    public void getCallIntent(String name)
     {
-        Intent intent = new Intent(getApplicationContext(),IncomingCall.class);
-        intent.putExtra("CallTo", "User_" + userID);
-        intent.putExtra("CallFrom", "User_" + OtherID);
-        intent.putExtra("Proj_ID", "Proj_" + String.valueOf(i));
-        intent.putExtra("User", user);
+        Intent intent = new Intent(getApplicationContext(), IncomingCall.class);
+        intent.putExtra("CallTo", userID);
+        intent.putExtra("CallerName", name);
         intent.putExtra("UserID", userID);
         startActivity(intent);
         finish();
@@ -312,7 +295,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                String callFrom = dataSnapshot.child("User_" + userID).getValue().toString();
+                String callFrom = dataSnapshot.child(userID).getValue().toString();
                 fbcb2.onCallback(callFrom);
             }
 
@@ -336,7 +319,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                String name = dataSnapshot.child("User_" + s).child("Username").getValue().toString();
+                String name = dataSnapshot.child(s).child("Username").getValue().toString();
                 fbcb3.onCallback(name);
             }
 
@@ -351,152 +334,5 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
     private interface FirebaseCallback3
     {
         void onCallback(String i);
-    }
-
-    public void updateText(String name)
-    {
-        TextView incoming_Call = (TextView) findViewById(R.id.Incoming_Call);
-        if(name.equals("None"))
-        {
-            incoming_Call.setText("No Incoming Call");
-        }
-        else
-        {
-            incoming_Call.setText("Incoming call from " + name);
-        }
-        Button Connect_Button = (Button) findViewById(R.id.Connect_Button);
-        Button Decline_Button = (Button) findViewById(R.id.Decline_Button);
-        if(incoming_Call.getText().toString().equals("No Incoming Call"))
-        {
-            Connect_Button.setEnabled(false);
-            Decline_Button.setEnabled(false);
-        }
-        else
-        {
-            Connect_Button.setEnabled(true);
-            Decline_Button.setEnabled(true);
-        }
-    }
-
-    public void Start_Video_Call(View view)
-    {
-        Log.i("I CAME HERE", "FUCK THIS_1");
-        mDatabase = mDatabase.getRoot();
-        mDatabase = mDatabase.child("Recieve_User").child("User_" + userID);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                String callFrom = dataSnapshot.getValue().toString();
-                Log.i("I CAME HERE", "FUCK THIS_2 " + callFrom);
-                if(!callFrom.equals("None"))
-                {
-                    OtherID = callFrom.substring(5);
-                }
-                mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
-                mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                    {
-                        String number = dataSnapshot.getValue().toString();
-                        mDatabase = mDatabase.getRoot().child("Connections");
-                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-                        {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                            {
-                                for(int i = 1; i <= Integer.parseInt(number); i++)
-                                {
-                                    String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
-                                    Log.i("I CAME HERE", "FUCK THIS NIGGA " + callFrom + " " + check);
-                                    if(check.equals(callFrom))
-                                    {
-                                        mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("User_" + userID);
-                                        Log.i("I CAME HERE", "FUCK THIS");
-                                        ConnectCallIntent(i);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError)
-                            {
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError)
-                    {
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
-            }
-        });
-    }
-
-    public void Decline_Video_Call(View view)
-    {
-        mDatabase = mDatabase.getRoot().child("Recieve_User").child("User_" + userID);
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                String callFrom = dataSnapshot.getValue().toString();
-                mDatabase.getRoot().child("Call_User").child(callFrom).setValue("None");
-                mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
-                mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                    {
-                        String number = dataSnapshot.getValue().toString();
-                        mDatabase = mDatabase.getRoot().child("Connections");
-                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-                        {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-                            {
-                                for(int i = 1; i <= Integer.parseInt(number); i++)
-                                {
-                                    String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
-                                    if(check.equals(callFrom))
-                                    {
-                                        mDatabase.child("Proj_" + String.valueOf(i)).child("User_1").setValue("None");
-                                        mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("None");
-                                        mDatabase.getRoot().child("Recieve_User").child("User_" + userID).setValue("None");
-                                        break;
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError)
-                            {
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError)
-                    {
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
-            }
-        });
-
     }
 }

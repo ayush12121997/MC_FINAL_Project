@@ -50,13 +50,11 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     private String Call_From = "";
     private String Call_To = "";
     private String Proj = "";
-    private String user;
     private String userID;
     private CanvasViewClient canvasView;
     private CanvasViewServer canvasView2;
     private Button but;
     private Button but2;
-    private boolean numAnim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -68,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         Call_From = intent.getStringExtra("CallFrom");
         Call_To = intent.getStringExtra("CallTo");
         Proj = intent.getStringExtra("Proj_ID");
-        user = intent.getStringExtra("User");
         userID = intent.getStringExtra("UserID");
         Log.i("CheckUser", userID);
         Log.i("CheckCallFrom", Call_From);
@@ -77,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         but2 = (Button)findViewById(R.id.button);
         canvasView = (CanvasViewClient)findViewById(R.id.canvas);
         canvasView2 = (CanvasViewServer)findViewById(R.id.canvas2);
-        numAnim = true;
         but = (Button)findViewById(R.id.button2);
         connectCall();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Call_User").child(Call_From);
@@ -193,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(),"THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-        intent.putExtra("Username", user);
         intent.putExtra("UserID", userID);
         startActivity(intent);
         finish();
@@ -210,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(),"THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-        intent.putExtra("Username", user);
         intent.putExtra("UserID", userID);
         startActivity(intent);
         finish();
@@ -340,24 +334,5 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 }
             }
         });
-    }
-
-    public void makeAnim()
-    {
-        if(numAnim)
-        {
-            FrameLayout upper = findViewById(R.id.frameLayout2);
-            upper.animate().translationYBy(-840).setDuration(1000);
-            FrameLayout lower = findViewById(R.id.frameLayout3);
-            lower.animate().translationYBy(840).setDuration(1000);
-        }
-        else
-        {
-            FrameLayout upper = findViewById(R.id.frameLayout2);
-            upper.animate().translationYBy(840).setDuration(1000);
-            FrameLayout lower = findViewById(R.id.frameLayout3);
-            lower.animate().translationYBy(-840).setDuration(1000);
-        }
-        numAnim = !numAnim;
     }
 }

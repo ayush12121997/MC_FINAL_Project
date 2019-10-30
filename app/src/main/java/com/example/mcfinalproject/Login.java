@@ -99,15 +99,12 @@ public class Login extends AppCompatActivity
                     {
                         check = false;
                         Intent Intent2 = new Intent(getApplicationContext(), HomeScreen.class);
-                        Intent2.putExtra("Username", USN);
-                        Intent2.putExtra("UserID", n);
+                        Intent2.putExtra("UserID", "User_" + n);
                         startActivity(Intent2);
                         finish();
                     }
                     if(n.equals(String.valueOf(Integer.parseInt(num) - 1)) && check)
                     {
-                        Log.i("LOL1", String.valueOf(check));
-                        Log.i("LOL2", num);
                         Username.setText("");
                         Password.setText("");
                         Toast.makeText(getApplicationContext(), "PLEASE CHECK YOUR CREDENTIALS.", Toast.LENGTH_LONG).show();
