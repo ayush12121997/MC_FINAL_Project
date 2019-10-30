@@ -1,79 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main"
+    android:orientation="vertical"
     tools:context=".Login">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Login"
+        android:fontFamily="@font/mulibold"
+        android:textSize="55dp"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginTop="85dp"
+        android:textAlignment="center"
+        android:textColor="@color/RealMagenta"
+
+
+        />
 
     <EditText
         android:id="@+id/EDT1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/login_hint"
-        android:fontFamily="@font/aclonica"
-        android:textSize="30dp"
+
         android:inputType="textPersonName"
         android:background="@drawable/solid_borders"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.4"
+        android:fontFamily="@font/muliblack"
+        android:textSize="30sp"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginTop="90dp"
+        android:textAlignment="center"
+
         />
 
     <EditText
         android:id="@+id/EDT2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password"
-        android:textSize="30dp"
-        android:fontFamily="@font/aclonica"
+
         android:inputType="textPassword"
         android:background="@drawable/solid_borders"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5"
+        android:fontFamily="@font/muliblack"
+        android:textSize="30sp"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
         />
 
     <Button
         android:id="@+id/LoginButton"
-        android:layout_width="234dp"
-        android:layout_height="100dp"
-        android:fontFamily="@font/aclonica"
-        android:textSize="25sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:onClick="Autheticate_Login"
         android:background="@drawable/button_solid_border"
         android:text="@string/login"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75"
+        android:fontFamily="@font/muliblack"
+        android:textSize="25sp"
+        android:padding="20dp"
+        android:layout_marginHorizontal="75dp"
+        android:layout_marginTop="50dp"
+        android:textAlignment="center"
         />
 
     <Button
         android:id="@+id/RegistrationButton"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:fontFamily="@font/aclonica"
-        android:textSize="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
         android:background="@drawable/button_solid_border"
         android:onClick="Register_User"
         android:text="@string/register"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
+        android:fontFamily="@font/muliblack"
+        android:textSize="25sp"
+        android:layout_marginHorizontal="85dp"
+        android:padding="20dp"
+        android:layout_marginTop="30dp"
+        android:textAlignment="center"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

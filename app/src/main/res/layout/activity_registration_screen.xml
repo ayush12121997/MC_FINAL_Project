@@ -1,63 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/main"
     tools:context=".RegistrationScreen">
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/Register"
+        android:fontFamily="@font/mulibold"
+        android:textSize="50dp"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginTop="45dp"
+        android:textAlignment="center"
+        android:textColor="@color/RealMagenta"
+
 
         />
     <EditText
         android:id="@+id/NEWUSERNAME"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="USERNAME"
         android:ems="10"
         android:inputType="textPersonName"
-        android:fontFamily="@font/aclonica"
-        android:textSize="22dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:fontFamily="@font/muliblack"
+        android:textSize="30sp"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginTop="140dp"
+        android:textAlignment="center"
         android:background="@drawable/solid_borders"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.25"/>
+    />
 
     <EditText
         android:id="@+id/NEWPASSWORD"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="PASSWORD"
         android:ems="10"
-        android:fontFamily="@font/aclonica"
-        android:textSize="22dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:fontFamily="@font/muliblack"
+        android:textSize="30sp"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginTop="15dp"
+        android:textAlignment="center"
         android:background="@drawable/solid_borders"
-        app:layout_constraintTop_toTopOf="parent"
+
         android:inputType="textPassword"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintVertical_bias="0.4"
-        app:layout_constraintHorizontal_bias="0.5"/>
+/>
 
     <Button
         android:id="@+id/regnow"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:text="@string/register"
-        android:fontFamily="@font/aclonica"
-        android:textSize="22sp"
+        android:fontFamily="@font/mulibold"
+        android:textSize="25sp"
         android:background="@drawable/button_solid_border"
         android:onClick="register_User"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintVertical_bias="0.6"
-        app:layout_constraintHorizontal_bias="0.5"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginHorizontal="75dp"
+        android:layout_marginTop="50dp"
+        android:textAlignment="center"
+      />
+
+</LinearLayout>

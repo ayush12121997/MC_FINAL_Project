@@ -7,4 +7,6 @@
     <string name="decline">Decline</string>
     <string name="register">REGISTER</string>
     <string name="password">Enter your password</string>
+    <string name="Login">Login</string>
+    <string name="Register">Register</string>
 </resources>
