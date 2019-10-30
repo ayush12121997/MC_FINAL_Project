@@ -9,4 +9,7 @@
     <string name="password">Enter your password</string>
     <string name="Login">Login</string>
     <string name="Register">Register</string>
+    <string name="YourFriendsList">Your Friends List</string>
+    <string name="DISCOVERFRIENDSLIST">Discover Friends!</string>
+    <string name="CHECKFRIENDLIST">Check Your Friend Request</string>
 </resources>
