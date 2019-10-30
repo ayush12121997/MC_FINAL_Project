@@ -47,6 +47,7 @@ public class IFR extends BaseAdapter implements ListAdapter {
             view=Infl.inflate(R.layout.item_friend_request_accept_or_decline,null);
         }
         boolean flag=false;
+        int dex2=i;
         TextView Name=(TextView) view.findViewById(R.id.sendersname1);
         Name.setText(this.List.get(i));
         Button accept=(Button) view.findViewById(R.id.accept_request);
@@ -60,12 +61,10 @@ public class IFR extends BaseAdapter implements ListAdapter {
 
 
                 ///code for deletion:
-                List.remove(dex);
-                dex=dex-1;
+                List.remove(dex2);
+
                 notifyDataSetChanged();
-                if(dex==-1){
-                    dex=0;
-                }
+
             }
         });
         decline.setOnClickListener(new View.OnClickListener() {

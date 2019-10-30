@@ -5,6 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegistrationScreen">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        />
     <EditText
         android:id="@+id/NEWUSERNAME"
         android:layout_width="wrap_content"
@@ -12,9 +17,12 @@
         android:hint="USERNAME"
         android:ems="10"
         android:inputType="textPersonName"
+        android:fontFamily="@font/aclonica"
+        android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/solid_borders"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintVertical_bias="0.25"/>
@@ -25,7 +33,10 @@
         android:layout_height="wrap_content"
         android:hint="PASSWORD"
         android:ems="10"
+        android:fontFamily="@font/aclonica"
+        android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/solid_borders"
         app:layout_constraintTop_toTopOf="parent"
         android:inputType="textPassword"
         app:layout_constraintRight_toRightOf="parent"
@@ -37,7 +48,11 @@
         android:id="@+id/regnow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="20dp"
         android:text="@string/register"
+        android:fontFamily="@font/aclonica"
+        android:textSize="22sp"
+        android:background="@drawable/button_solid_border"
         android:onClick="register_User"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"

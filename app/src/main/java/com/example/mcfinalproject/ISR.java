@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ISR extends BaseAdapter implements ListAdapter {
+public class ISR extends BaseAdapter implements ListAdapter{
     private Context CTX;
     private ArrayList<String> List;
     private int dex;
@@ -39,30 +39,23 @@ public class ISR extends BaseAdapter implements ListAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        dex=i;
-      //  if(view==null){
-            LayoutInflater Infl=(LayoutInflater) this.CTX.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view=Infl.inflate(R.layout.item_send_friend_request,null);
-       // }
+
         boolean flag=false;
+        LayoutInflater Infl=(LayoutInflater) this.CTX.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view=Infl.inflate(R.layout.item_send_friend_request,null);
         TextView Name=(TextView) view.findViewById(R.id.sendersname2);
         Name.setText(this.List.get(i));
+        dex=i;
+        int dex2=i;
         Button send_request=(Button) view.findViewById(R.id.send_request);
+
         send_request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ////// SEND FRIEND REQUEST
-
-
-
-
-                ///code for deletion:
-                List.remove(dex);
-                dex=dex-1;
+                List.remove(dex2);
                 notifyDataSetChanged();
-                if(dex==-1){
-                    dex=0;
-                }
+
             }
         });
         return view;
