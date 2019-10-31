@@ -98,7 +98,7 @@ public class Login extends AppCompatActivity
                     if(USN.equals(user) && PSW.equals(pass))
                     {
                         check = false;
-                        Intent Intent2 = new Intent(getApplicationContext(), HomeScreen.class);
+                        Intent Intent2 = new Intent(getApplicationContext(), SendRequestScreen.class);
                         Intent2.putExtra("UserID", "User_" + n);
                         startActivity(Intent2);
                         finish();

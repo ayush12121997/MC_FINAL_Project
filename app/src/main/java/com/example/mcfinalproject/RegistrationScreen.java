@@ -70,5 +70,6 @@ public class RegistrationScreen extends AppCompatActivity
         mDatabase.child("Call_User").child("User_" + n).setValue("None");
         mDatabase.child("Recieve_User").child("User_" + n).setValue("None");
         mDatabase.child("Friend_Lists").child("User_" + n).child("Num_Friends").setValue("0");
+        mDatabase.child("Friend_Requests").child("User_" + n).child("Num_Requests").setValue("0");
     }
 }
