@@ -11,7 +11,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".SendRequestScreen"></activity>
         <activity android:name=".AcceptRequestScreen" />
-        <activity android:name=".IncomingCall"></activity>
+        <activity android:name=".IncomingCall">
+
+        </activity>
         <activity android:name=".RegistrationScreen" />
         <activity android:name=".Login">
             <intent-filter>
@@ -19,6 +21,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".HomeScreen" />
         <activity android:name=".MainActivity">

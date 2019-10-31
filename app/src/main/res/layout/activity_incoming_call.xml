@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:background="@color/RealMagenta"
     tools:context=".IncomingCall">
 
 
@@ -11,46 +13,71 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Incoming call from "
-        android:fontFamily="@string/common_open_on_phone"
-        android:textSize="22dp"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.25"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/incomingCallText"
+        android:fontFamily="@font/mulibold"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="50dp"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:id="@+id/ANOTHERTEXTVIEW"
+        />
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="195dp"
+        android:src="@drawable/avatar"
+        android:layout_gravity="center"
+
         />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="232dp"
-        android:layout_height="67dp"
-        android:background="@drawable/acceptp"
-        android:onClick="acceptCall"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.74" />
+    <TextView
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="232dp"
-        android:layout_height="67dp"
-        android:background="@drawable/declinep"
-        android:onClick="declineCall"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.896" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Incoming call from "
+        android:fontFamily="@font/mulibold"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        android:layout_marginBottom="85dp"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:id="@+id/incomingCallText"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/declinep"
+            android:onClick="declineCall"
+            android:layout_marginRight="80dp"
+
+            />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <VideoView
+            android:id="@+id/blackhole"
+            android:layout_width="59dp"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/swipe"
+       />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="55dp"
+            android:scaleX="-1"
+            android:layout_height="match_parent"
+            android:background="@drawable/acceptp"
+            android:onClick="acceptCall"
+            android:layout_marginLeft="80dp"
+          />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
