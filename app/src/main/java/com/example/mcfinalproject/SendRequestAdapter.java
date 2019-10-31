@@ -46,7 +46,6 @@ public class SendRequestAdapter extends BaseAdapter implements ListAdapter
     @Override
     public View getView(int i, View view, ViewGroup viewGroup)
     {
-
         LayoutInflater Infl = (LayoutInflater) this.CTX.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = Infl.inflate(R.layout.item_send_friend_request, null);
         TextView Name = (TextView) view.findViewById(R.id.sendersname2);

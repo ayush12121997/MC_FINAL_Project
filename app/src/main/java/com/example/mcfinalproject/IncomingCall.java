@@ -11,6 +11,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +38,27 @@ public class IncomingCall extends AppCompatActivity
         userID = intent.getStringExtra("UserID");
         otherID = "";
         runAnim();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
+        mDatabase.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                String check = dataSnapshot.getValue().toString();
+                if(check.equals("None"))
+                {
+                    Button btn = (Button) findViewById(R.id.button4);
+                    Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
+                    btn.performClick();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
     }
 
     public void acceptCall(View view)
@@ -108,46 +130,50 @@ public class IncomingCall extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 String callFrom = dataSnapshot.getValue().toString();
-                mDatabase.getRoot().child("Call_User").child(callFrom).setValue("None");
-                mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
-                mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                if(!callFrom.equals("None"))
                 {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                    mDatabase.getRoot().child("Call_User").child(callFrom).setValue("None");
+                    mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                     {
-                        String number = dataSnapshot.getValue().toString();
-                        mDatabase = mDatabase.getRoot().child("Connections");
-                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                         {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                            String number = dataSnapshot.getValue().toString();
+                            mDatabase = mDatabase.getRoot().child("Connections");
+                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                             {
-                                for(int i = 1; i <= Integer.parseInt(number); i++)
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                                 {
-                                    String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
-                                    if(check.equals(callFrom))
+                                    for(int i = 1; i <= Integer.parseInt(number); i++)
                                     {
-                                        mDatabase.child("Proj_" + String.valueOf(i)).child("User_1").setValue("None");
-                                        mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("None");
-                                        mDatabase.getRoot().child("Recieve_User").child(userID).setValue("None");
-                                        rejectCall();
-                                        break;
+                                        String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
+                                        if(check.equals(callFrom))
+                                        {
+                                            mDatabase.child("Proj_" + String.valueOf(i)).child("User_1").setValue("None");
+                                            mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("None");
+                                            mDatabase.getRoot().child("Recieve_User").child(userID).setValue("None");
+                                            rejectCall();
+                                            break;
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError)
-                            {
-                            }
-                        });
-                    }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError)
+                                {
+                                }
+                            });
+                        }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError)
-                    {
-                    }
-                });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError)
+                        {
+                        }
+                    });
+                }
+
             }
 
             @Override

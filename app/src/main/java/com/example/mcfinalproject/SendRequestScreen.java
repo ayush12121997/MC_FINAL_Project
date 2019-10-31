@@ -3,6 +3,7 @@ package com.example.mcfinalproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.renderscript.Sampler;
+import android.text.method.SingleLineTransformationMethod;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -61,8 +62,8 @@ public class SendRequestScreen extends AppCompatActivity
                                 boolean exists = false;
                                 for(int i = 1; i <= Integer.parseInt(numFriends); i++)
                                 {
-                                    String user = dataSnapshot.child("Friend_" + String.valueOf(i)).getValue().toString();
-                                    if(user.equals(userKey))
+                                    String currFriend = dataSnapshot.child("Friend_" + String.valueOf(i)).getValue().toString();
+                                    if(currFriend.equals(userKey))
                                     {
                                         exists = true;
                                         break;
@@ -70,8 +71,36 @@ public class SendRequestScreen extends AppCompatActivity
                                 }
                                 if(!exists)
                                 {
-                                    Send_Friends_Requests.add(name);
-                                    sendRequestAdapter.notifyDataSetChanged();
+                                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Requests").child(userKey);
+                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                                    {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                                        {
+                                            String num = dataSnapshot.child("Num_Requests").getValue().toString();
+                                            boolean exists2 = false;
+                                            for(int i = 1; i <= Integer.parseInt(num); i++)
+                                            {
+                                                String requestFrom = dataSnapshot.child("Request_" + String.valueOf(i)).getValue().toString();
+                                                if(requestFrom.equals(userID))
+                                                {
+                                                    exists2 = true;
+                                                    break;
+                                                }
+                                            }
+                                            if(!exists2)
+                                            {
+                                                Send_Friends_Requests.add(name);
+                                                sendRequestAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError)
+                                        {
+
+                                        }
+                                    });
                                 }
                             }
 
@@ -109,38 +138,39 @@ public class SendRequestScreen extends AppCompatActivity
 
     public void sendRequest(String sendTo, String sendFrom)
     {
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Requests").child(sendFrom).child("Num_Requests");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                String currFriends = dataSnapshot.getValue().toString();
-                String newNum = String.valueOf(Integer.parseInt(currFriends) + 1);
-                mDatabase.getRoot().child("Friend_Requests").child(sendFrom).child("Num_Requests").setValue(newNum);
-                mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-                mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                String num = dataSnapshot.child("Num_Users").getValue().toString();
+                for(int i = 0; i < Integer.parseInt(num); i++)
                 {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                    String name = dataSnapshot.child("User_" + String.valueOf(i)).child("Username").getValue().toString();
+                    String key = "User_" + String.valueOf(i);
+                    if(name.equals(sendTo))
                     {
-                        String num = dataSnapshot.child("Num_Users").getValue().toString();
-                        for(int i = 0; i < Integer.parseInt(num); i++)
+                        mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Requests").child(key);
+                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                         {
-                            String name = dataSnapshot.child("User_" + String.valueOf(i)).child("Username").getValue().toString();
-                            if(name.equals(sendTo))
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                             {
-                                mDatabase.getRoot().child("Friend_Requests").child(sendFrom).child("Request_" + newNum).setValue("User_" + String.valueOf(i));
+                                String currFriends = dataSnapshot.child("Num_Requests").getValue().toString();
+                                String newNum = String.valueOf(Integer.parseInt(currFriends) + 1);
+                                mDatabase.getRoot().child("Friend_Requests").child(key).child("Num_Requests").setValue(newNum);
+                                mDatabase.getRoot().child("Friend_Requests").child(key).child("Request_" + newNum).setValue(sendFrom);
                             }
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError)
-                    {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError)
+                            {
 
+                            }
+                        });
                     }
-                });
+                }
             }
 
             @Override
@@ -149,5 +179,15 @@ public class SendRequestScreen extends AppCompatActivity
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        Intent intent = new Intent(this, HomeScreen.class);
+        intent.putExtra("UserID", userID);
+        startActivity(intent);
+        finish();
     }
 }

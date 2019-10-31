@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,18 +48,32 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         final ArrayAdapter<String> AdtArr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friends);
         friendsList.setAdapter(AdtArr);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Lists").child(userID);
         mDatabase.addChildEventListener(new ChildEventListener()
         {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
             {
-                String value = dataSnapshot.getKey();
-                if(!value.equals("Num_Users") && !value.equals("Num_Projects"))
+                String key = dataSnapshot.getKey();
+                if(!key.equals("Num_Friends"))
                 {
-                    String name = dataSnapshot.child("Username").getValue(String.class);
-                    friends.add(name);
-                    AdtArr.notifyDataSetChanged();
+                    String friendKey = dataSnapshot.getValue().toString();
+                    mDatabase.getRoot().child("Users").child(friendKey).child("Username").addListenerForSingleValueEvent(new ValueEventListener()
+                    {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        {
+                            String name = dataSnapshot.getValue(String.class);
+                            friends.add(name);
+                            AdtArr.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError)
+                        {
+
+                        }
+                    });
                 }
             }
 
@@ -334,5 +349,21 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
     private interface FirebaseCallback3
     {
         void onCallback(String i);
+    }
+
+    public void goToDiscoverFriends(View view)
+    {
+        Intent intent = new Intent(getApplicationContext(), SendRequestScreen.class);
+        intent.putExtra("UserID", userID);
+        startActivity(intent);
+        finish();
+    }
+
+    public void goToAddFriends(View view)
+    {
+        Intent intent = new Intent(getApplicationContext(), AcceptRequestScreen.class);
+        intent.putExtra("UserID", userID);
+        startActivity(intent);
+        finish();
     }
 }
