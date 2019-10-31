@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                Log.i("FUCK THIS SHIT", Call_From);
                 String check = dataSnapshot.getValue().toString();
                 if(check.equals("None"))
                 {
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         but.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabase.getRoot().child("Connections").child("Proj_1").child("CanvasDraw").setValue(canvasView.pl);
+                mDatabase.getRoot().child("Connections").child(Proj).child("CanvasDraw").setValue(canvasView.pl);
             }
         });
         but2.setOnClickListener(new View.OnClickListener() {
@@ -108,8 +107,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             public void onClick(View v) {
                 canvasView.clearCanvas();
                 canvasView.pl = "None";
-                mDatabase.getRoot().child("Connections").child("Proj_1").child("CanvasDraw").setValue(canvasView.pl);
-//                makeAnim();
+                mDatabase.getRoot().child("Connections").child(Proj).child("CanvasDraw").setValue(canvasView.pl);
             }
         });
         checkDrawing();
@@ -185,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mSession.disconnect();
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
+        mDatabase.getRoot().child("Connections").child(Proj).child("CanvasDraw").setValue("None");
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(),"THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
@@ -294,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void getDrawing(FirebaseCallback2 fbcb2)
     {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase = mDatabase.getRoot().child("Connections").child("Proj_1").child("CanvasDraw");
+        mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("CanvasDraw");
         mDatabase.addValueEventListener(new ValueEventListener()
         {
             @Override
@@ -327,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             @Override
             public void onCallback2(String rekt)
             {
-                if(userID.equals("1"))
+                if(userID.equals("User_1"))
                 {
                     Log.i("Get drawing", rekt);
                     canvasView2.updateCanvas(rekt);
