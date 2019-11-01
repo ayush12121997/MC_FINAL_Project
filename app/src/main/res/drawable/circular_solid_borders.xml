@@ -7,8 +7,8 @@
     >
     <solid android:color="@color/FitGrey"/>
     <corners
-        android:radius="20dp"
-     />
+        android:radius="50dp"
+        />
     <padding android:top="8dp"
         android:bottom="8dp"
         android:right="8dp"

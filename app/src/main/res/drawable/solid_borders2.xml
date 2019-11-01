@@ -5,10 +5,10 @@
 
 
     >
-    <solid android:color="@color/FitGrey"/>
+    <solid android:color="@color/FitWhite"/>
     <corners
         android:radius="20dp"
-     />
+        />
     <padding android:top="8dp"
         android:bottom="8dp"
         android:right="8dp"

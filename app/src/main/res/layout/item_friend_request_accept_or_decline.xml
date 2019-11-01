@@ -29,7 +29,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:textSize="15sp"
-        android:background="@drawable/button_solid_border2"
+        android:background="@drawable/solid_borders2"
         android:text="ACCEPT" />
 
     <Button
@@ -37,7 +37,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:background="@drawable/button_solid_border"
+        android:background="@drawable/solid_borders2"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:textSize="15sp"

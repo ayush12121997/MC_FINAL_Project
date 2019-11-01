@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SendRequestScreen"></activity>
+        <activity android:name=".SendRequestScreen">
+
+        </activity>
         <activity android:name=".AcceptRequestScreen" />
         <activity android:name=".IncomingCall">
 
@@ -23,7 +25,9 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".HomeScreen" />
+        <activity android:name=".HomeScreen" >
+
+    </activity>
         <activity android:name=".MainActivity">
         </activity>
 

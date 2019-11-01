@@ -47,7 +47,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                 blackhole.start();
             }
         });
-        blackhole.setVideoPath("android.resource://"+getPackageName()+"/"+R.raw.swipe);
+        blackhole.setVideoPath("android.resource://"+getPackageName()+"/"+R.raw.videox);
         blackhole.start();
         blackhole.setOnTouchListener(this);
 
@@ -255,7 +255,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     @Override
     public boolean onDrag(View view, DragEvent dragEvent) {
 
-
+/*
         switch(dragEvent.getAction()) {
 
             case DragEvent.ACTION_DRAG_STARTED:
@@ -290,7 +290,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
                 break;
 
-        }
+        }*/
         return true;
     }
 

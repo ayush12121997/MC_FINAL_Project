@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">VideoCallApplication</string>
     <string name="login">Login</string>
-    <string name="login_hint">Enter your username</string>
+    <string name="login_hint">Username</string>
     <string name="call_message1">No Incoming Call</string>
     <string name="connect">Connect</string>
     <string name="decline">Decline</string>
     <string name="register">REGISTER</string>
-    <string name="password">Enter your password</string>
+    <string name="password">Password</string>
     <string name="Login">Login</string>
     <string name="Register">Register</string>
     <string name="YourFriendsList">Your Friends List</string>
-    <string name="DISCOVERFRIENDSLIST">Discover Friends!</string>
-    <string name="CHECKFRIENDLIST">Check Your Friend Request</string>
+    <string name="DISCOVERFRIENDSLIST">Find Friends!</string>
+    <string name="CHECKFRIENDLIST">Check Friends\' Request</string>
 </resources>

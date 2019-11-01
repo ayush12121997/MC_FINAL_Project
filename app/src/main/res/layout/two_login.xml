@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+
     android:id="@+id/gallerylayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
     tools:context=".Login">
 
     <Gallery
@@ -18,35 +19,32 @@
         android:background="@color/TitleBlue" />
 
     <LinearLayout
-        android:layout_width="310dp"
-        android:layout_height="460dp"
+        android:layout_width="320dp"
+        android:layout_height="470dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="47dp"
-        android:layout_marginBottom="224dp"
-        android:background="@drawable/layout_white_curved"
         android:gravity="center_horizontal"
+        android:layout_marginTop="47dp"
+        android:layout_marginBottom="214dp"
+        android:background="@drawable/layout_white_curved"
         android:orientation="vertical"
         android:padding="5dp">
-        <ImageView
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_marginTop="15dp"
-            android:src="@drawable/ayush"
-            android:scaleX="-1"
-            ></ImageView>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="35dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="55dp"
             android:fontFamily="@font/mulibold"
+            android:shadowColor="@color/ElectricBlue"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="5"
             android:text="@string/Login"
             android:textAlignment="center"
             android:textColor="@color/TitleBlue"
-            android:textSize="30sp"
+            android:textSize="55sp"
 
 
             />
@@ -56,11 +54,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="90dp"
 
             android:fontFamily="@font/muliblack"
             android:hint="@string/login_hint"
             android:inputType="textPersonName"
+            android:shadowColor="@color/RealMagenta"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
             android:textAlignment="viewStart"
             android:textColorHint="@color/TheRightGrey"
             android:textSize="20sp"
@@ -76,6 +78,10 @@
             android:fontFamily="@font/muliblack"
             android:hint="@string/password"
             android:inputType="textPassword"
+            android:shadowColor="@color/RealMagenta"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
             android:textAlignment="viewStart"
             android:textColorHint="@color/TheRightGrey"
             android:textSize="20sp" />
@@ -85,32 +91,26 @@
 
     <Button
         android:id="@+id/LoginButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/solid_borders"
+        android:layout_marginHorizontal="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="175dp"
-        android:background="@drawable/circular_solid_borders"
-        android:padding="20dp"
-        android:paddingHorizontal="30dp"
-        android:text="✔"
-        android:textSize="40sp"
-        android:onClick="Autheticate_Login"/>
-
+        android:layout_marginBottom="185dp"
+        android:text="Button" />
     <Button
         android:id="@+id/RegistrationButton"
-        android:layout_width="310dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:background="@drawable/solid_borders"
-        android:layout_marginBottom="42dp"
-        android:text="@string/Register"
-        android:textSize="20dp"
-        android:onClick="Register_User"
-        android:fontFamily="@font/mulibold"
-        android:textColor="@color/FitWhite"/>
+        android:layout_marginHorizontal="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="185dp"
+        android:text="Button" />
 
 
 </RelativeLayout>

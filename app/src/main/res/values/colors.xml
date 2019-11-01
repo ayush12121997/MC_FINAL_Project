@@ -9,7 +9,12 @@
     <color name="TheRightOrange">#ff8400</color>
     <color name="RealMagenta">#bf0a3d</color>
     <color name="TheRightGrey">#424242</color>
-    <color name="ElectricBlue">#006280</color>
+    <color name="ElectricBlue">#6200EE</color>
     <color name="TheRightGreen">#34eb55</color>
     <color name="AnotherRightGreen">#006b02</color>
+    <color name="DarkBlue">#002d75</color>
+    <color name="FitGrey">#6e8ab5</color>
+    <color name="FitBlue">#2a4773</color>
+    <color name="TitleBlue">#001940</color>
+    <color name="FitWhite">#d9dadb</color>
 </resources>

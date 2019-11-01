@@ -1,46 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".SendRequestScreen">
+
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25"
-        app:layout_constraintHorizontal_bias="0.5"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        tools:context=".SendRequestScreen"
+    android:background="@color/TitleBlue"
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Discover Friends!"
+            android:text="@string/DISCOVERFRIENDSLIST"
             android:fontFamily="@font/mulibold"
-            android:textColor="@color/RealMagenta"
+            android:textColor="@color/FitWhite"
             android:textSize="28dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintVertical_bias="0.1"
-            app:layout_constraintHorizontal_bias="0.5"
             android:layout_marginVertical="40dp"
             android:layout_gravity="center"
-            ></TextView>
+            android:shadowRadius="5"
+            android:shadowColor="@color/ElectricBlue"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            />
         <ListView
             android:id="@+id/holder_list2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/solid_borders"
             >
         </ListView>
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>

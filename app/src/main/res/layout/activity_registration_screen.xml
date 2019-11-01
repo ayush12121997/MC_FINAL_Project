@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/main"
+    android:background="@color/TitleBlue"
     tools:context=".RegistrationScreen">
     <TextView
         android:layout_width="match_parent"
@@ -16,7 +16,11 @@
         android:layout_marginHorizontal="35dp"
         android:layout_marginTop="115dp"
         android:textAlignment="center"
-        android:textColor="@color/RealMagenta"
+        android:textColor="@color/FitWhite"
+        android:shadowRadius="5"
+        android:shadowColor="@color/ElectricBlue"
+        android:shadowDx="2"
+        android:shadowDy="2"
 
 
         />
@@ -33,6 +37,8 @@
         android:layout_marginTop="100dp"
         android:textAlignment="center"
         android:background="@drawable/solid_borders"
+        android:textColorHint="@color/TheRightGrey"
+
     />
 
     <EditText
@@ -47,6 +53,7 @@
         android:layout_marginTop="15dp"
         android:textAlignment="center"
         android:background="@drawable/solid_borders"
+        android:textColorHint="@color/TheRightGrey"
 
         android:inputType="textPassword"
 />
@@ -55,15 +62,16 @@
         android:id="@+id/regnow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="@string/register"
+        android:padding="15dp"
+        android:text="✔"
         android:fontFamily="@font/mulibold"
         android:textSize="20sp"
-        android:background="@drawable/button_solid_border"
+        android:background="@drawable/circular_solid_borders"
         android:onClick="register_User"
-        android:layout_marginHorizontal="75dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginHorizontal="150dp"
+        android:layout_marginTop="180dp"
         android:textAlignment="center"
+
       />
 
 </LinearLayout>

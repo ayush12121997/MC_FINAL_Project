@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="@color/RealMagenta"
+    android:background="@color/TitleBlue"
     tools:context=".IncomingCall">
 
 
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Incoming call from "
         android:fontFamily="@font/mulibold"
-        android:textColor="#000000"
+        android:textColor="@color/FitWhite"
         android:textSize="30sp"
         android:layout_marginTop="100dp"
         android:layout_marginBottom="50dp"
@@ -25,7 +25,7 @@
     <ImageView
         android:layout_width="150dp"
         android:layout_height="195dp"
-        android:src="@drawable/avatar"
+        android:src="@drawable/bluavatar"
         android:layout_gravity="center"
 
         />
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:text="Incoming call from "
         android:fontFamily="@font/mulibold"
-        android:textColor="#000000"
+        android:textColor="@color/FitWhite"
         android:textSize="30sp"
         android:layout_marginBottom="85dp"
         android:textAlignment="center"
@@ -63,7 +63,7 @@
             android:id="@+id/blackhole"
             android:layout_width="59dp"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/swipe"
+            app:srcCompat="@raw/videox"
        />
 
         <Button
