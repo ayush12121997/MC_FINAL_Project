@@ -42,9 +42,9 @@ public class CanvasViewServer extends View {
     public CanvasViewServer(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+        setWillNotDraw(false);
         colorPath = new ArrayList<>();
         mPath = new Path();
-
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.BLACK);
@@ -61,27 +61,27 @@ public class CanvasViewServer extends View {
         mCanvas = new Canvas(mBitmap);
     }
 
-//    @Override
-//    protected void onDraw(Canvas canvas) {
-//        super.onDraw(canvas);
-//
-//        canvas.drawPath(mPath, mPaint);
-//    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int col = mPaint.getColor();
-        for(int i=0;i<colorPath.size();i++)
-        {
-            Pair<Path,Integer> p = colorPath.get(i);
-            mPaint.setColor(p.second);
-            canvas.drawPath(p.first,mPaint);
-        }
-        mPaint.setColor(col);
+
         canvas.drawPath(mPath, mPaint);
-//        mPath = new Path();
     }
+
+//    @Override
+//    protected void onDraw(Canvas canvas) {
+//        super.onDraw(canvas);
+//        int col = mPaint.getColor();
+//        for(int i=0;i<colorPath.size();i++)
+//        {
+//            Pair<Path,Integer> p = colorPath.get(i);
+//            mPaint.setColor(p.second);
+//            canvas.drawPath(p.first,mPaint);
+//        }
+//        mPaint.setColor(col);
+//        canvas.drawPath(mPath, mPaint);
+////        mPath = new Path();
+//    }
 
     private void StartTouch(float x, float y) {
         mPath.moveTo(x, y);
@@ -100,7 +100,8 @@ public class CanvasViewServer extends View {
     }
 
     public void clearCanvas() {
-        mPath = new Path();
+//        mPath = new Path();
+        mPath.reset();
         colorPath = new ArrayList<>();
         invalidate();
     }
@@ -155,17 +156,85 @@ public class CanvasViewServer extends View {
             Log.d("SOCKET", "Empty String : Clearing Canvas.");
         }
     }
+//    public void updateCanvas(final String data) {
+//
+//        if (!data.equals("")) {
+//            Log.d("SOCKET", "In updateCanvas");
+//            Log.d("SOCKET", data);
+//            String[] points = data.split(";");
+//            for (int i = 0; i < points.length; i++) {
+//                String pt = points[i];
+//                String[] val = pt.split(",");
+//                float x = Float.parseFloat(val[0]);
+//                float y = Float.parseFloat(val[1]);
+//                int flag = Integer.parseInt(val[2]);
+//
+//                switch (flag) {
+//                    case -1:
+//                        StartTouch(x, y);
+//                        invalidate();
+//                        break;
+//                    case 0:
+//                        moveTouch(x, y);
+//                        invalidate();
+//                        break;
+//                    case 1:
+//                        upTouch();
+//                        invalidate();
+//                        break;
+//                }
+//            }
+//        } else {
+//            clearCanvas();
+//            Log.d("SOCKET", "In else");
+//        }
+//    }
 
+//    public void updateCanvas(final String data1, final String data2) {
+//        if((data1+data2).length()==0)
+//            clearCanvas();
+//        else
+//        {
+//            mPath = new Path();
+//            update(data1);
+//            mPath = new Path();
+//            update(data2);
+//        }
+//    }
     public void updateCanvas(final String data1, final String data2) {
-        if((data1+data2).length()==0)
-            clearCanvas();
-        else
-        {
-            mPath = new Path();
-            update(data1);
-            mPath = new Path();
-            update(data2);
+        clearCanvas();
+        final String data = data1+data2;
+        if (!data.equals("")) {
+            Log.d("SOCKET", "In updateCanvas");
+            Log.d("SOCKET", data);
+            String[] points = data.split(";");
+            for (int i = 0; i < points.length; i++) {
+                String pt = points[i];
+                String[] val = pt.split(",");
+                float x = Float.parseFloat(val[0]);
+                float y = Float.parseFloat(val[1]);
+                int flag = Integer.parseInt(val[2]);
+
+                switch (flag) {
+                    case -1:
+                        StartTouch(x, y);
+                        invalidate();
+                        break;
+                    case 0:
+                        moveTouch(x, y);
+                        invalidate();
+                        break;
+                    case 1:
+                        upTouch();
+                        invalidate();
+                        break;
+                }
+            }
         }
+//        else {
+//            clearCanvas();
+//            Log.d("SOCKET", "In else");
+//        }
     }
 
 }

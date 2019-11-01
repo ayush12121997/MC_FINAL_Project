@@ -189,6 +189,10 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mSession.disconnect();
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
@@ -205,6 +209,10 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mSession.disconnect();
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
@@ -377,21 +385,25 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         if(Call_From.equals(userID) && subBig)
         {
             ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
+//            ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
             mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
         }
         else if(Call_From.equals(userID) && !subBig)
         {
             ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
+//            ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
             mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
         }
         else if(!Call_From.equals(userID) && subBig)
         {
             ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
+//            ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
             mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
         }
         else
         {
             ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
+//            ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
             mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
         }
     }

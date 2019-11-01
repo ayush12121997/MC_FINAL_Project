@@ -160,18 +160,22 @@ public class mFragment extends Fragment {
     }
     public View getCanvasPubClient()
     {
+        while(getView()==null);
         return getView().findViewById(R.id.canvasPubClient);
     }
     public View getCanvasPubServer()
     {
+        while(getView()==null);
         return getView().findViewById(R.id.canvasPubServer);
     }
     public View getCanvasSubClient()
     {
+        while(getView()==null);
         return getView().findViewById(R.id.canvasSubClient);
     }
     public View getCanvasSubServer()
     {
+        while(getView()==null);
         return getView().findViewById(R.id.canvasSubServer);
     }
 }

@@ -56,19 +56,25 @@ public class CanvasViewClient extends View {
         mCanvas = new Canvas(mBitmap);
     }
 
+//    @Override
+//    protected void onDraw(Canvas canvas) {
+//        super.onDraw(canvas);
+//        int col = mPaint.getColor();
+//        for(int i=0;i<colorPath.size();i++)
+//        {
+//            Pair<Path,Integer> p = colorPath.get(i);
+//            mPaint.setColor(p.second);
+//            canvas.drawPath(p.first,mPaint);
+//        }
+//        mPaint.setColor(col);
+//        canvas.drawPath(mPath, mPaint);
+////        mPath = new Path();
+//    }
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int col = mPaint.getColor();
-        for(int i=0;i<colorPath.size();i++)
-        {
-            Pair<Path,Integer> p = colorPath.get(i);
-            mPaint.setColor(p.second);
-            canvas.drawPath(p.first,mPaint);
-        }
-        mPaint.setColor(col);
+
         canvas.drawPath(mPath, mPaint);
-//        mPath = new Path();
     }
 
 
@@ -91,9 +97,13 @@ public class CanvasViewClient extends View {
         mPath.lineTo(mX, mY);
     }
 
+//    public void clearCanvas(){
+//        mPath = new Path();
+//        colorPath = new ArrayList<>();
+//        invalidate();
+//    }
     public void clearCanvas(){
-        mPath = new Path();
-        colorPath = new ArrayList<>();
+        mPath.reset();
         invalidate();
     }
     public void setColor(int color)
@@ -104,6 +114,37 @@ public class CanvasViewClient extends View {
         Log.d("fragment","here");
     }
 
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//
+//        float x = event.getX();
+//        float y = event.getY();
+//
+//        switch (event.getAction()){
+//            case MotionEvent.ACTION_DOWN:
+//                client_data = new CanvasObject(x, y, -1);
+//                pl = pl + x + "," + y +"," + "-1" +","+mPaint.getColor()+ ";";
+//                Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
+//                StartTouch(x, y);
+//                invalidate();
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                client_data = new CanvasObject(x, y, 0);
+//                pl = pl + x + "," + y +"," + "0" +","+mPaint.getColor()+ ";";
+//                Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
+//                moveTouch(x, y);
+//                invalidate();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                client_data = new CanvasObject(x, y, 1);
+//                pl = pl + x + "," + y +"," + "1" +","+mPaint.getColor()+ ";";
+//                Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
+//                upTouch();
+//                invalidate();
+//                break;
+//        }
+//        return true;
+//    }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -113,21 +154,21 @@ public class CanvasViewClient extends View {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 client_data = new CanvasObject(x, y, -1);
-                pl = pl + x + "," + y +"," + "-1" +","+mPaint.getColor()+ ";";
+                pl = pl + x + "," + y +"," + "-1" + ";";
                 Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
                 StartTouch(x, y);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 client_data = new CanvasObject(x, y, 0);
-                pl = pl + x + "," + y +"," + "0" +","+mPaint.getColor()+ ";";
+                pl = pl + x + "," + y +"," + "0" + ";";
                 Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
                 moveTouch(x, y);
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 client_data = new CanvasObject(x, y, 1);
-                pl = pl + x + "," + y +"," + "1" +","+mPaint.getColor()+ ";";
+                pl = pl + x + "," + y +"," + "1" + ";";
                 Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
                 upTouch();
                 invalidate();
