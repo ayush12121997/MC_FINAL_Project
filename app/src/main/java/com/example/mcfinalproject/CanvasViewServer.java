@@ -89,36 +89,35 @@ public class CanvasViewServer extends View {
 
     public void updateCanvas(final String data) {
 
-            if (data != null) {
-                Log.d("SOCKET", "In updateCanvas");
-                Log.d("SOCKET", data);
-                String[] points = data.split(";");
-                for (int i = 0; i < points.length; i++) {
-                    String pt = points[i];
-                    String[] val = pt.split(",");
-                    float x = Float.parseFloat(val[0]);
-                    float y = Float.parseFloat(val[1]);
-                    int flag = Integer.parseInt(val[2]);
+        if (data != null) {
+            Log.d("SOCKET", "In updateCanvas");
+            Log.d("SOCKET", data);
+            String[] points = data.split(";");
+            for (int i = 0; i < points.length; i++) {
+                String pt = points[i];
+                String[] val = pt.split(",");
+                float x = Float.parseFloat(val[0]);
+                float y = Float.parseFloat(val[1]);
+                int flag = Integer.parseInt(val[2]);
 
-                    switch (flag) {
-                        case -1:
-                            StartTouch(x, y);
-                            invalidate();
-                            break;
-                        case 0:
-                            moveTouch(x, y);
-                            invalidate();
-                            break;
-                        case 1:
-                            upTouch();
-                            invalidate();
-                            break;
-                    }
+                switch (flag) {
+                    case -1:
+                        StartTouch(x, y);
+                        invalidate();
+                        break;
+                    case 0:
+                        moveTouch(x, y);
+                        invalidate();
+                        break;
+                    case 1:
+                        upTouch();
+                        invalidate();
+                        break;
                 }
-            } else {
-                Log.d("SOCKET", "In else");
             }
+        } else {
+            Log.d("SOCKET", "In else");
+        }
     }
 
 }
-

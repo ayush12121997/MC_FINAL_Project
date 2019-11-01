@@ -11,6 +11,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.core.util.Pair;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 // MainActivity.java
 
 public class CanvasViewClient extends View {
@@ -26,11 +32,12 @@ public class CanvasViewClient extends View {
     Context context;
     private static CanvasObject client_data;
     String pl = "";
+    List<Pair<Path, Integer>> colorPath;
 
     public CanvasViewClient(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-
+        colorPath = new ArrayList<Pair<Path,Integer>>();
         mPath = new Path();
 
         mPaint = new Paint();
@@ -52,9 +59,18 @@ public class CanvasViewClient extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        int col = mPaint.getColor();
+        for(int i=0;i<colorPath.size();i++)
+        {
+            Pair<Path,Integer> p = colorPath.get(i);
+            mPaint.setColor(p.second);
+            canvas.drawPath(p.first,mPaint);
+        }
+        mPaint.setColor(col);
         canvas.drawPath(mPath, mPaint);
+//        mPath = new Path();
     }
+
 
     private void StartTouch(float x, float y){
         mPath.moveTo(x, y);
@@ -71,10 +87,17 @@ public class CanvasViewClient extends View {
             mY = y;
         }
     }
-
     public void clearCanvas(){
-        mPath.reset();
+        mPath = new Path();
+        colorPath = new ArrayList<>();
         invalidate();
+    }
+    public void setColor(int color)
+    {
+        colorPath.add(new Pair(mPath,mPaint.getColor()));
+        mPaint.setColor(color);
+        mPath = new Path();
+        Log.d("fragment","here");
     }
 
     private void upTouch(){

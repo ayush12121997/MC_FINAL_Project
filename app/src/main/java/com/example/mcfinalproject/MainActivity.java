@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     private String Call_From = "";
     private String Call_To = "";
     private String Proj = "";
-    private String user;
     private String userID;
     private CanvasViewClient canvasView;
     private CanvasViewServer canvasView2;
@@ -75,12 +74,12 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     {
         this.fragment = fragment;
     }
-    public void makeConnection2()
-    {
-        mSession = new Session.Builder(this, "46431312", "1_MX40NjQzMTMxMn5-MTU3MjI5NzM5MjY5M35wdnV2S1NPSVkrTDBIU09Ucm5zU0Q2RTB-fg").build();
-        mSession.setSessionListener(this);
-        mSession.connect("T1==cGFydG5lcl9pZD00NjQzMTMxMiZzaWc9NTEzZjBiOTVmNWU1ZGM4MWJiZDZiOWU4Mzc5Y2E0ZTNjZDY2NzY5ZjpzZXNzaW9uX2lkPTFfTVg0ME5qUXpNVE14TW41LU1UVTNNakk1TnpNNU1qWTVNMzV3ZG5WMlMxTlBTVmtyVERCSVUwOVVjbTV6VTBRMlJUQi1mZyZjcmVhdGVfdGltZT0xNTcyMjk3NDE0Jm5vbmNlPTAuNTE4MDMwMjQ0NzU3NzQ1NiZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTc0ODkzMDEyJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9");
-    }
+//    public void makeConnection2()
+//    {
+//        mSession = new Session.Builder(this, "46431312", "1_MX40NjQzMTMxMn5-MTU3MjI5NzM5MjY5M35wdnV2S1NPSVkrTDBIU09Ucm5zU0Q2RTB-fg").build();
+//        mSession.setSessionListener(this);
+//        mSession.connect("T1==cGFydG5lcl9pZD00NjQzMTMxMiZzaWc9NTEzZjBiOTVmNWU1ZGM4MWJiZDZiOWU4Mzc5Y2E0ZTNjZDY2NzY5ZjpzZXNzaW9uX2lkPTFfTVg0ME5qUXpNVE14TW41LU1UVTNNakk1TnpNNU1qWTVNMzV3ZG5WMlMxTlBTVmtyVERCSVUwOVVjbTV6VTBRMlJUQi1mZyZjcmVhdGVfdGltZT0xNTcyMjk3NDE0Jm5vbmNlPTAuNTE4MDMwMjQ0NzU3NzQ1NiZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNTc0ODkzMDEyJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9");
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -104,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         Call_From = intent.getStringExtra("CallFrom");
         Call_To = intent.getStringExtra("CallTo");
         Proj = intent.getStringExtra("Proj_ID");
-        user = intent.getStringExtra("User");
         userID = intent.getStringExtra("UserID");
 //        Log.i("CheckUser", userID);
 //        but2 = (Button)findViewById(R.id.button);
@@ -112,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 //        canvasView2 = (CanvasViewServer)findViewById(R.id.canvas2);
 //
 //        but = (Button)findViewById(R.id.button2);
-//        connectCall();
+        connectCall();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Call_User").child(Call_From);
         mDatabase.addValueEventListener(new ValueEventListener()
         {
@@ -151,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 //
 //            }
 //        });
-        makeConnection2();
+//        makeConnection2();
         checkDrawing();
     }
     public void afterFragmentLoaded()
@@ -162,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         Call_From = intent.getStringExtra("CallFrom");
         Call_To = intent.getStringExtra("CallTo");
         Proj = intent.getStringExtra("Proj_ID");
-        user = intent.getStringExtra("User");
         userID = intent.getStringExtra("UserID");
 //        Log.i("CheckUser", userID);
 //        but2 = (Button)findViewById(R.id.button);
@@ -208,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 //
 //            }
 //        });
-        makeConnection2();
+//        makeConnection2();
         checkDrawing();
 
     }
@@ -345,7 +342,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(),"THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-        intent.putExtra("Username", user);
         intent.putExtra("UserID", userID);
         startActivity(intent);
         finish();
@@ -362,7 +358,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(),"THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-        intent.putExtra("Username", user);
         intent.putExtra("UserID", userID);
         startActivity(intent);
         finish();

@@ -71,9 +71,8 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                 String check = dataSnapshot.getValue().toString();
                 if(check.equals("None"))
                 {
-                    Button btn = (Button) findViewById(R.id.button4);
                     Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
-                    btn.performClick();
+                    rejectCall();
                 }
             }
 
@@ -197,7 +196,6 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                         }
                     });
                 }
-                rejectCall();
             }
 
             @Override
@@ -332,12 +330,12 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
         Log.i("TATA",v+" "+v1);
-        if(v>10){
+        if(v>30){
             Log.i("TATA","hi");
             Button X=findViewById(R.id.button3);
             X.performClick();
         }
-        else if(v<-50){
+        else if(v<-30){
             Log.i("TATA","bye");
             Button X=findViewById(R.id.button4);
             X.performClick();
