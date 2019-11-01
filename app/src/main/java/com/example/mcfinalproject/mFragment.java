@@ -152,15 +152,6 @@ public class mFragment extends Fragment {
         FrameLayout publisherContainer = getView().findViewById(R.id.publisher_container);
         publisherContainer.removeAllViews();
     }
-    public View getCanvasViewClient()
-    {
-        return getView().findViewById(R.id.canvas);
-    }
-
-    public View getCanvasViewServer()
-    {
-        return getView().findViewById(R.id.canvas2);
-    }
 
     public void setColor(int color) {
         if(getView()==null)
