@@ -109,7 +109,7 @@ public class CanvasViewServer extends View {
     }
     public void update(final String data)
     {
-        if (data != null) {
+        if (data!=null && data.length()!=0) {
         Log.d("SOCKET", "In updateCanvas");
         Log.d("SOCKET", data);
         String[] points = data.split(";");
@@ -149,7 +149,7 @@ public class CanvasViewServer extends View {
                     break;
             }
         }
-        } else if(data.equals("")) {
+        } else{
 //            clearCanvas();
             Log.d("SOCKET", "Empty String : Clearing Canvas.");
         }
