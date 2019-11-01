@@ -35,6 +35,7 @@ import top.defaults.colorpicker.ColorPickerPopup;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import top.defaults.colorpicker.ColorPickerView;
 
 public class MainActivity extends AppCompatActivity implements Session.SessionListener, PublisherKit.PublisherListener
@@ -49,11 +50,13 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     private FrameLayout mPublisherViewContainer;
     private FrameLayout mSubscriberViewContainer;
 
-    public Publisher getmPublisher() {
+    public Publisher getmPublisher()
+    {
         return mPublisher;
     }
 
-    public Subscriber getmSubscriber() {
+    public Subscriber getmSubscriber()
+    {
         return mSubscriber;
     }
 
@@ -74,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     {
         this.fragment = fragment;
     }
-//    public void makeConnection2()
+
+    //    public void makeConnection2()
 //    {
 //        mSession = new Session.Builder(this, "46431312", "1_MX40NjQzMTMxMn5-MTU3MjI5NzM5MjY5M35wdnV2S1NPSVkrTDBIU09Ucm5zU0Q2RTB-fg").build();
 //        mSession.setSessionListener(this);
@@ -84,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        Log.d("fragment","MainActivity onCreate");
+        Log.d("fragment", "MainActivity onCreate");
         setContentView(R.layout.activity_main_fragments);
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
@@ -92,10 +96,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 
 //        ColorPickerView
         fragment = new mFragment(1);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.main_fragmentFrame,fragment)
-                .commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.main_fragmentFrame, fragment).commit();
         getSupportFragmentManager().executePendingTransactions();
 //        afterF/ragmentLoaded();
         requestPermissions();
@@ -152,10 +153,11 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 //        makeConnection2();
         checkDrawing();
     }
+
     public void afterFragmentLoaded()
     {
         requestPermissions();
-        Log.d("fragment","Done with requestPermissions");
+        Log.d("fragment", "Done with requestPermissions");
         Intent intent = getIntent();
         Call_From = intent.getStringExtra("CallFrom");
         Call_To = intent.getStringExtra("CallTo");
@@ -207,12 +209,12 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 //        });
 //        makeConnection2();
         checkDrawing();
-
     }
+
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
     private void requestPermissions()
     {
-        Log.d("fragment","in requestPermissions");
+        Log.d("fragment", "in requestPermissions");
         String[] perms = {Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
         if(EasyPermissions.hasPermissions(this, perms))
         {
@@ -274,37 +276,36 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         });
     }
 
-    public void showPallete(View view) {
-        new ColorPickerPopup.Builder(this)
-                .initialColor(Color.RED) // Set initial color
+    public void showPallete(View view)
+    {
+        new ColorPickerPopup.Builder(this).initialColor(Color.RED) // Set initial color
                 .enableBrightness(true) // Enable brightness slider or not
                 .enableAlpha(true) // Enable alpha slider or not
-                .okTitle("Choose")
-                .cancelTitle("Cancel")
-                .showIndicator(true)
-                .showValue(true)
-                .build()
-                .show(new ColorPickerPopup.ColorPickerObserver() {
-                    @Override
-                    public void onColorPicked(int color) {
+                .okTitle("Choose").cancelTitle("Cancel").showIndicator(true).showValue(true).build().show(new ColorPickerPopup.ColorPickerObserver()
+        {
+            @Override
+            public void onColorPicked(int color)
+            {
 //                        v.setBackgroundColor(color);
-                        fragment.setColor(color);
+                fragment.setColor(color);
 //                        ((CanvasViewClient)fragment.getCanvasViewClient()).setColor(color);
-                    }
+            }
 
-                    public void onColor(int color, boolean fromUser) {
+            public void onColor(int color, boolean fromUser)
+            {
 
-                    }
-                });
+            }
+        });
     }
 
     public void send(View view)
     {
-
+        mDatabase.getRoot().child("Connections").child(Proj).child("CanvasDraw").setValue(((CanvasViewClient) fragment.getCanvasViewClient()).pl);
     }
 
-    public void clearCanvas(View view) {
-        ((CanvasViewClient)fragment.getCanvasViewClient()).clearCanvas();
+    public void clearCanvas(View view)
+    {
+        ((CanvasViewClient) fragment.getCanvasViewClient()).clearCanvas();
     }
 
     private interface FirebaseCallback
@@ -342,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
-        Toast.makeText(getApplicationContext(),"THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
         intent.putExtra("UserID", userID);
         startActivity(intent);
@@ -358,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
-        Toast.makeText(getApplicationContext(),"THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
         intent.putExtra("UserID", userID);
         startActivity(intent);
@@ -401,14 +402,14 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void onStreamReceived(Session session, Stream stream)
     {
         Log.i(LOG_TAG, "Stream Received");
-        Log.d("fragment","onStreamReceived");
+        Log.d("fragment", "onStreamReceived");
 
         if(mSubscriber == null)
         {
             mSubscriber = new Subscriber.Builder(this, stream).build();
             mSession.subscribe(mSubscriber);
-            ((mFragment)fragment).addSubscriber(mSubscriber.getView());
-            ((mFragment)fragment).addPublisher(mPublisher.getView());
+            ((mFragment) fragment).addSubscriber(mSubscriber.getView());
+            ((mFragment) fragment).addPublisher(mPublisher.getView());
 //            mSubscriberViewContainer.addView(mSubscriber.getView());
 //            mPublisherViewContainer.addView(mPublisher.getView());
         }
@@ -456,14 +457,14 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void getDrawing(FirebaseCallback2 fbcb2)
     {
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase = mDatabase.getRoot().child("Connections").child("Proj_1").child("CanvasDraw");
+        mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("CanvasDraw");
         mDatabase.addValueEventListener(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 String rec = dataSnapshot.getValue().toString();
-                if(!rec.equals("Noneee"))
+                if(!rec.equals("None"))
                 {
                     fbcb2.onCallback2(rec);
                 }
@@ -489,11 +490,8 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             @Override
             public void onCallback2(String rekt)
             {
-                if(userID.equals("1"))
-                {
-                    Log.i("Get drawing", rekt);
-                    ((CanvasViewClient)fragment.getCanvasViewClient()).;
-                }
+                Log.i("Get drawing", rekt);
+                ((CanvasViewServer) fragment.getCanvasViewServer()).updateCanvas(rekt);
             }
         });
     }
