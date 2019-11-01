@@ -175,6 +175,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                                             mDatabase.child("Proj_" + String.valueOf(i)).child("User_1").setValue("None");
                                             mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("None");
                                             mDatabase.getRoot().child("Recieve_User").child(userID).setValue("None");
+                                            mDatabase.getRoot().child("Call_User").child(callFrom).setValue("None");
                                             rejectCall();
                                             break;
                                         }
