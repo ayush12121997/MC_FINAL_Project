@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         Proj = intent.getStringExtra("Proj_ID");
         userID = intent.getStringExtra("UserID");
         connectCall();
-        mDatabase = mDatabase.getRoot().child("Recieve_User").child(Proj).child(Call_To);
+        mDatabase = mDatabase.getRoot().child("Recieve_User").child(Call_To);
         mDatabase.addValueEventListener(new ValueEventListener()
         {
             @Override
