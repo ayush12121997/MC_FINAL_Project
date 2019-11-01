@@ -86,6 +86,25 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         Proj = intent.getStringExtra("Proj_ID");
         userID = intent.getStringExtra("UserID");
         connectCall();
+        mDatabase = mDatabase.getRoot().child("Recieve_User").child(Proj).child(Call_To);
+        mDatabase.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                String check = dataSnapshot.getValue().toString();
+                if(check.equals("None"))
+                {
+                    disconnect(null);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
 //        checkDrawing();
     }
 
@@ -171,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
-        Toast.makeText(getApplicationContext(), "THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
         intent.putExtra("UserID", userID);
         startActivity(intent);
@@ -187,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
-        Toast.makeText(getApplicationContext(), "THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
         intent.putExtra("UserID", userID);
         startActivity(intent);
