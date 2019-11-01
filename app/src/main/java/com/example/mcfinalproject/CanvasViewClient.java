@@ -87,6 +87,10 @@ public class CanvasViewClient extends View {
             mY = y;
         }
     }
+    private void upTouch(){
+        mPath.lineTo(mX, mY);
+    }
+
     public void clearCanvas(){
         mPath = new Path();
         colorPath = new ArrayList<>();
@@ -98,10 +102,6 @@ public class CanvasViewClient extends View {
         mPaint.setColor(color);
         mPath = new Path();
         Log.d("fragment","here");
-    }
-
-    private void upTouch(){
-        mPath.lineTo(mX, mY);
     }
 
     @Override

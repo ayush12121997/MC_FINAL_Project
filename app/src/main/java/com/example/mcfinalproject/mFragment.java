@@ -44,6 +44,18 @@ public class mFragment extends Fragment {
             }
         }
 //        ((MainActivity)getActivity()).afterFragmentLoaded();
+        if(configuration==-1)
+        {
+           //Subscriber small
+            getView().findViewById(R.id.canvasSubClient).setVisibility(View.INVISIBLE);
+            ((MainActivity)getActivity()).checkDrawing();
+        }
+        else
+        {
+            //Publisher small
+            getView().findViewById(R.id.canvasPubClient).setVisibility(View.INVISIBLE);
+            ((MainActivity)getActivity()).checkDrawing();
+        }
     }
 
     @Override
@@ -80,6 +92,7 @@ public class mFragment extends Fragment {
             {
                 mFragment invertedFragment = getInvertedFragment();
                 ((MainActivity)getActivity()).setCurrentFragment(invertedFragment);
+                ((MainActivity)getActivity()).invertSubBig();
                 removePublisher();
                 removeSubscriber();
 
@@ -99,6 +112,7 @@ public class mFragment extends Fragment {
             {
                 mFragment invertedFragment = getInvertedFragment();
                 ((MainActivity)getActivity()).setCurrentFragment(invertedFragment);
+                ((MainActivity)getActivity()).invertSubBig();
                 removePublisher();
                 removeSubscriber();
 

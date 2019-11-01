@@ -107,46 +107,63 @@ public class CanvasViewServer extends View {
     private void upTouch() {
         mPath.lineTo(mX, mY);
     }
-
-    public void updateCanvas(final String data) {
-
+    public void update(final String data)
+    {
         if (data != null) {
-            Log.d("SOCKET", "In updateCanvas");
-            Log.d("SOCKET", data);
-            String[] points = data.split(";");
-            int col = Color.BLACK;
-            for (int i = 0; i < points.length; i++) {
-                String pt = points[i];
-                String[] val = pt.split(",");
-                float x = Float.parseFloat(val[0]);
-                float y = Float.parseFloat(val[1]);
-                int flag = Integer.parseInt(val[2]);
-                if(col!=Integer.parseInt(val[3])) {
-                    colorPath.add(new Pair<>(mPath, col));
-                    mPaint.setColor(col);
-                    mPath = new Path();
-                }
-                col = Integer.parseInt(val[3]);
+        Log.d("SOCKET", "In updateCanvas");
+        Log.d("SOCKET", data);
+        String[] points = data.split(";");
+
+        int col = Color.BLACK;
+
+        for (int i = 0; i < points.length; i++) {
+            String pt = points[i];
+            String[] val = pt.split(",");
+            float x = Float.parseFloat(val[0]);
+            float y = Float.parseFloat(val[1]);
+            int flag = Integer.parseInt(val[2]);
+            col = Integer.parseInt(val[3]);
+
+            if(i==0) {
+                mPaint.setColor(col);
+            }
+            else if(col!=mPaint.getColor()) {
+                colorPath.add(new Pair<>(mPath, mPaint.getColor()));
+                mPaint.setColor(col);
+                mPath = new Path();
+            }
 //                mPath = new Path();
 //                mPaint.setColor(col);
-                switch (flag) {
-                    case -1:
-                        StartTouch(x, y);
-                        invalidate();
-                        break;
-                    case 0:
-                        moveTouch(x, y);
-                        invalidate();
-                        break;
-                    case 1:
-                        upTouch();
-                        invalidate();
-                        break;
-                }
+            switch (flag) {
+                case -1:
+                    StartTouch(x, y);
+                    invalidate();
+                    break;
+                case 0:
+                    moveTouch(x, y);
+                    invalidate();
+                    break;
+                case 1:
+                    upTouch();
+                    invalidate();
+                    break;
             }
+        }
         } else if(data.equals("")) {
-            clearCanvas();
+//            clearCanvas();
             Log.d("SOCKET", "Empty String : Clearing Canvas.");
+        }
+    }
+
+    public void updateCanvas(final String data1, final String data2) {
+        if((data1+data2).length()==0)
+            clearCanvas();
+        else
+        {
+            mPath = new Path();
+            update(data1);
+            mPath = new Path();
+            update(data2);
         }
     }
 
