@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
-    tools:context=".MainActivity">
+    android:background="@color/colorPrimaryDark">
 
     <Button
         android:id="@+id/buttonDisconnect"
@@ -83,6 +82,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@color/common_google_signin_btn_text_dark_focused">
+
         </FrameLayout>
 
         <com.example.mcfinalproject.CanvasViewServer

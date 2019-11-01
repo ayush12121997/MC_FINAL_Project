@@ -197,7 +197,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                         }
                     });
                 }
-
+                rejectCall();
             }
 
             @Override
