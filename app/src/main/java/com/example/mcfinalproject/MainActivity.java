@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue(((CanvasViewClient) fragment.getCanvasSubClient()).pl + curr);
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue(curr + ((CanvasViewClient) fragment.getCanvasSubClient()).pl);
                     ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
                 }
 
@@ -327,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue(((CanvasViewClient) fragment.getCanvasPubClient()).pl + curr);
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl );
                     ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
                 }
 
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue(((CanvasViewClient) fragment.getCanvasPubClient()).pl + curr);
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl );
                     ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
                 }
 
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue(((CanvasViewClient) fragment.getCanvasSubClient()).pl + curr);
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue(curr + ((CanvasViewClient) fragment.getCanvasSubClient()).pl);
                     ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
                 }
 

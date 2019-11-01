@@ -201,6 +201,10 @@ public class CanvasViewServer extends View {
 //            update(data2);
 //        }
 //    }
+    public void setColor(int color)
+    {
+
+    }
     public void updateCanvas(final String data1, final String data2) {
         clearCanvas();
         final String data = data1+data2;
@@ -208,12 +212,18 @@ public class CanvasViewServer extends View {
             Log.d("SOCKET", "In updateCanvas");
             Log.d("SOCKET", data);
             String[] points = data.split(";");
+            int col_id =0;
             for (int i = 0; i < points.length; i++) {
                 String pt = points[i];
                 String[] val = pt.split(",");
                 float x = Float.parseFloat(val[0]);
                 float y = Float.parseFloat(val[1]);
                 int flag = Integer.parseInt(val[2]);
+                col_id = Integer.parseInt(val[3]);
+
+                mPaint.setColor(col_id);
+
+                Log.d("SOCKET",val[3] );
 
                 switch (flag) {
                     case -1:
@@ -230,6 +240,7 @@ public class CanvasViewServer extends View {
                         break;
                 }
             }
+
         }
 //        else {
 //            clearCanvas();

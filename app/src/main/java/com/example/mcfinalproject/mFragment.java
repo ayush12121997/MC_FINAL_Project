@@ -154,9 +154,17 @@ public class mFragment extends Fragment {
     }
 
     public void setColor(int color) {
-        if(getView()==null)
-            Log.d("fragment","isNull");
-        ((CanvasViewClient)getView().findViewById(R.id.canvas)).setColor(color);
+        while (getView()==null);
+//            Log.d("fragment","isNull");
+        if(configuration==1)
+        {
+            ((CanvasViewClient)getView().findViewById(R.id.canvasSubClient)).setColor(color);
+        }
+        else
+        {
+            ((CanvasViewClient)getView().findViewById(R.id.canvasPubClient)).setColor(color);
+        }
+//        ((CanvasViewClient)getView().findViewById(R.id.canvas)).setColor(color);
     }
     public View getCanvasPubClient()
     {

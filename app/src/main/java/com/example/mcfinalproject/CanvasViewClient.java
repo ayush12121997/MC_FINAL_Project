@@ -103,6 +103,7 @@ public class CanvasViewClient extends View {
 //        invalidate();
 //    }
     public void clearCanvas(){
+        pl = "";
         mPath.reset();
         invalidate();
     }
@@ -110,7 +111,7 @@ public class CanvasViewClient extends View {
     {
         colorPath.add(new Pair(mPath,mPaint.getColor()));
         mPaint.setColor(color);
-        mPath = new Path();
+//        mPath = new Path();
         Log.d("fragment","here");
     }
 
@@ -150,25 +151,25 @@ public class CanvasViewClient extends View {
 
         float x = event.getX();
         float y = event.getY();
-
+        int col_id = mPaint.getColor();
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 client_data = new CanvasObject(x, y, -1);
-                pl = pl + x + "," + y +"," + "-1" + ";";
+                pl = pl + x + "," + y +"," + "-1" +","+col_id + ";";
                 Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
                 StartTouch(x, y);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 client_data = new CanvasObject(x, y, 0);
-                pl = pl + x + "," + y +"," + "0" + ";";
+                pl = pl + x + "," + y +"," + "0" +","+col_id+ ";";
                 Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
                 moveTouch(x, y);
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 client_data = new CanvasObject(x, y, 1);
-                pl = pl + x + "," + y +"," + "1" + ";";
+                pl = pl + x + "," + y +"," + "1" + ","+col_id+";";
                 Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
                 upTouch();
                 invalidate();
