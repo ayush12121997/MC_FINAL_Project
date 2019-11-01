@@ -13,11 +13,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import androidx.core.util.Pair;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 // MainActivity2.java
 
@@ -32,11 +36,12 @@ public class CanvasViewServer extends View {
     private float mX, mY;
     private static final float TOLERANCE = 5;
     Context context;
+    List<Pair<Path, Integer>> colorPath;
 
     public CanvasViewServer(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-
+        colorPath = new ArrayList<>();
         mPath = new Path();
 
         mPaint = new Paint();
@@ -55,11 +60,26 @@ public class CanvasViewServer extends View {
         mCanvas = new Canvas(mBitmap);
     }
 
+//    @Override
+//    protected void onDraw(Canvas canvas) {
+//        super.onDraw(canvas);
+//
+//        canvas.drawPath(mPath, mPaint);
+//    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        int col = mPaint.getColor();
+        for(int i=0;i<colorPath.size();i++)
+        {
+            Pair<Path,Integer> p = colorPath.get(i);
+            mPaint.setColor(p.second);
+            canvas.drawPath(p.first,mPaint);
+        }
+        mPaint.setColor(col);
         canvas.drawPath(mPath, mPaint);
+//        mPath = new Path();
     }
 
     private void StartTouch(float x, float y) {
@@ -79,7 +99,8 @@ public class CanvasViewServer extends View {
     }
 
     public void clearCanvas() {
-        mPath.reset();
+        mPath = new Path();
+        colorPath = new ArrayList<>();
         invalidate();
     }
 
@@ -93,13 +114,21 @@ public class CanvasViewServer extends View {
             Log.d("SOCKET", "In updateCanvas");
             Log.d("SOCKET", data);
             String[] points = data.split(";");
+            int col = Color.BLACK;
             for (int i = 0; i < points.length; i++) {
                 String pt = points[i];
                 String[] val = pt.split(",");
                 float x = Float.parseFloat(val[0]);
                 float y = Float.parseFloat(val[1]);
                 int flag = Integer.parseInt(val[2]);
-
+                if(col!=Integer.parseInt(val[3])) {
+                    colorPath.add(new Pair<>(mPath, col));
+                    mPaint.setColor(col);
+                    mPath = new Path();
+                }
+                col = Integer.parseInt(val[3]);
+//                mPath = new Path();
+//                mPaint.setColor(col);
                 switch (flag) {
                     case -1:
                         StartTouch(x, y);
@@ -115,8 +144,9 @@ public class CanvasViewServer extends View {
                         break;
                 }
             }
-        } else {
-            Log.d("SOCKET", "In else");
+        } else if(data.equals("")) {
+            clearCanvas();
+            Log.d("SOCKET", "Empty String : Clearing Canvas.");
         }
     }
 

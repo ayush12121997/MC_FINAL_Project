@@ -18,8 +18,13 @@
             android:layout_height="match_parent"
             android:background="@color/ElectricBlue" />
 
+        <com.example.mcfinalproject.CanvasViewServer
+            android:id="@+id/canvasSubServer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <com.example.mcfinalproject.CanvasViewClient
-            android:id="@+id/canvas"
+            android:id="@+id/canvasSubClient"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
@@ -38,12 +43,17 @@
             android:layout_height="match_parent"
             android:background="@color/ElectricBlue">
 
-        </FrameLayout>
-
         <com.example.mcfinalproject.CanvasViewServer
-            android:id="@+id/canvas2"
+            android:id="@+id/canvasPubServer"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <com.example.mcfinalproject.CanvasViewClient
+            android:id="@+id/canvasPubClient"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        </FrameLayout>
 
     </FrameLayout>
 </FrameLayout>

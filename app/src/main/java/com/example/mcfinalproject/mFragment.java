@@ -153,4 +153,20 @@ public class mFragment extends Fragment {
             Log.d("fragment","isNull");
         ((CanvasViewClient)getView().findViewById(R.id.canvas)).setColor(color);
     }
+    public View getCanvasPubClient()
+    {
+        return getView().findViewById(R.id.canvasPubClient);
+    }
+    public View getCanvasPubServer()
+    {
+        return getView().findViewById(R.id.canvasPubServer);
+    }
+    public View getCanvasSubClient()
+    {
+        return getView().findViewById(R.id.canvasSubClient);
+    }
+    public View getCanvasSubServer()
+    {
+        return getView().findViewById(R.id.canvasSubServer);
+    }
 }

@@ -113,21 +113,21 @@ public class CanvasViewClient extends View {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 client_data = new CanvasObject(x, y, -1);
-                pl = pl + x + "," + y +"," + "-1" + ";";
+                pl = pl + x + "," + y +"," + "-1" +","+mPaint.getColor()+ ";";
                 Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
                 StartTouch(x, y);
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 client_data = new CanvasObject(x, y, 0);
-                pl = pl + x + "," + y +"," + "0" + ";";
+                pl = pl + x + "," + y +"," + "0" +","+mPaint.getColor()+ ";";
                 Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
                 moveTouch(x, y);
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 client_data = new CanvasObject(x, y, 1);
-                pl = pl + x + "," + y +"," + "1" + ";";
+                pl = pl + x + "," + y +"," + "1" +","+mPaint.getColor()+ ";";
                 Log.d("SOCKET", client_data.x + " " + client_data.y + " " + client_data.flag);
                 upTouch();
                 invalidate();

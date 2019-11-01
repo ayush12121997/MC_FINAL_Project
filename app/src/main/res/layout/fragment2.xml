@@ -20,8 +20,13 @@
             android:background="@color/common_google_signin_btn_text_dark_focused">
         </FrameLayout>
 
+        <com.example.mcfinalproject.CanvasViewServer
+            android:id="@+id/canvasPubServer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <com.example.mcfinalproject.CanvasViewClient
-            android:id="@+id/canvas"
+            android:id="@+id/canvasPubClient"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -41,7 +46,12 @@
             android:background="@color/common_google_signin_btn_text_dark_focused" />
 
         <com.example.mcfinalproject.CanvasViewServer
-            android:id="@+id/canvas2"
+            android:id="@+id/canvasSubServer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.example.mcfinalproject.CanvasViewClient
+            android:id="@+id/canvasSubClient"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
