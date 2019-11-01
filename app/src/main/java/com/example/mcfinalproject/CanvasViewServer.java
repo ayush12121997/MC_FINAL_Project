@@ -27,6 +27,7 @@ import java.util.List;
 
 public class CanvasViewServer extends View {
 
+//    file change
     public int width;
     public int height;
     private Bitmap mBitmap;
