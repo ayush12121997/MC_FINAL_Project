@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:id="@+id/frameLayout3"
+        android:transitionName="frameLayout3Transition"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <FrameLayout
+            android:id="@+id/publisher_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/common_google_signin_btn_text_dark_focused">
+        </FrameLayout>
+
+        <com.example.mcfinalproject.CanvasViewClient
+            android:id="@+id/canvas"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+    <FrameLayout
+        android:id="@+id/frameLayout2"
+        android:transitionName="frameLayout2Transition"
+        android:layout_width="155dp"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom|end"
+        >
+
+        <FrameLayout
+            android:id="@+id/subscriber_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/common_google_signin_btn_text_dark_focused" />
+
+        <com.example.mcfinalproject.CanvasViewServer
+            android:id="@+id/canvas2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+</FrameLayout>
