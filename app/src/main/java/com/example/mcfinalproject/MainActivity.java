@@ -298,7 +298,9 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 });
     }
 
-    public void send(View view) {
+    public void send(View view)
+    {
+
     }
 
     public void clearCanvas(View view) {
@@ -490,7 +492,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 if(userID.equals("1"))
                 {
                     Log.i("Get drawing", rekt);
-//                    canvasView2.updateCanvas(rekt);
+                    ((CanvasViewClient)fragment.getCanvasViewClient()).;
                 }
             }
         });

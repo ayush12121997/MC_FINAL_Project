@@ -143,6 +143,11 @@ public class mFragment extends Fragment {
         return getView().findViewById(R.id.canvas);
     }
 
+    public View getCanvasViewServer()
+    {
+        return getView().findViewById(R.id.canvas2);
+    }
+
     public void setColor(int color) {
         if(getView()==null)
             Log.d("fragment","isNull");

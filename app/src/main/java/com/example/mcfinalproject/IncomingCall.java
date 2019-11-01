@@ -3,7 +3,6 @@ package com.example.mcfinalproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
-import androidx.core.view.MotionEventCompat;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
