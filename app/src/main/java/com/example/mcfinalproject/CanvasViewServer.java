@@ -61,10 +61,24 @@ public class CanvasViewServer extends View {
         mCanvas = new Canvas(mBitmap);
     }
 
+//    @Override
+//    protected void onDraw(Canvas canvas) {
+//        super.onDraw(canvas);
+//
+//        canvas.drawPath(mPath, mPaint);
+//    }
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(Canvas canvas)
+    {
         super.onDraw(canvas);
-
+        int col = mPaint.getColor();
+        for(int i=0;i<colorPath.size();i++)
+        {
+            Pair<Path,Integer> p = colorPath.get(i);
+            mPaint.setColor(p.second);
+            canvas.drawPath(p.first,mPaint);
+        }
+        mPaint.setColor(col);
         canvas.drawPath(mPath, mPaint);
     }
 
@@ -221,7 +235,15 @@ public class CanvasViewServer extends View {
                 int flag = Integer.parseInt(val[2]);
                 col_id = Integer.parseInt(val[3]);
 
-                mPaint.setColor(col_id);
+//                mPaint.setColor(col_id);
+                if(i==0) {
+                    mPaint.setColor(col_id);
+                }
+                else if(col_id!=mPaint.getColor()) {
+                    colorPath.add(new Pair<>(mPath, mPaint.getColor()));
+                    mPaint.setColor(col_id);
+                    mPath = new Path();
+                }
 
                 Log.d("SOCKET",val[3] );
 

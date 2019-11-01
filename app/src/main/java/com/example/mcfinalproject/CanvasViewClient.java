@@ -70,13 +70,27 @@ public class CanvasViewClient extends View {
 //        canvas.drawPath(mPath, mPaint);
 ////        mPath = new Path();
 //    }
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+//    @Override
+//    protected void onDraw(Canvas canvas) {
+//        super.onDraw(canvas);
+//
+//        canvas.drawPath(mPath, mPaint);
+//    }
 
+    @Override
+    protected void onDraw(Canvas canvas)
+    {
+        super.onDraw(canvas);
+        int col = mPaint.getColor();
+        for(int i=0;i<colorPath.size();i++)
+        {
+            Pair<Path,Integer> p = colorPath.get(i);
+            mPaint.setColor(p.second);
+            canvas.drawPath(p.first,mPaint);
+        }
+        mPaint.setColor(col);
         canvas.drawPath(mPath, mPaint);
     }
-
 
     private void StartTouch(float x, float y){
         mPath.moveTo(x, y);
@@ -105,13 +119,14 @@ public class CanvasViewClient extends View {
     public void clearCanvas(){
         pl = "";
         mPath.reset();
+        colorPath = new ArrayList<>();
         invalidate();
     }
     public void setColor(int color)
     {
         colorPath.add(new Pair(mPath,mPaint.getColor()));
         mPaint.setColor(color);
-//        mPath = new Path();
+        mPath = new Path();
         Log.d("fragment","here");
     }
 
