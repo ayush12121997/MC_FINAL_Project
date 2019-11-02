@@ -75,12 +75,12 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         fragment = new mFragment(1);
         getSupportFragmentManager().beginTransaction().add(R.id.main_fragmentFrame, fragment).commit();
         getSupportFragmentManager().executePendingTransactions();
-        requestPermissions();
         Intent intent = getIntent();
         Call_From = intent.getStringExtra("CallFrom");
         Call_To = intent.getStringExtra("CallTo");
         Proj = intent.getStringExtra("Proj_ID");
         userID = intent.getStringExtra("UserID");
+        requestPermissions();
         connectCall();
         mDatabase = mDatabase.getRoot().child("Recieve_User").child(Call_To);
         mDatabase.addValueEventListener(new ValueEventListener()
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 String check = dataSnapshot.getValue().toString();
                 if(check.equals("None"))
                 {
-                    disconnect(null);
+                    declined();
                 }
             }
 
@@ -195,6 +195,24 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         finish();
     }
 
+    public void declined()
+    {
+        mSession.disconnect();
+        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
+        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
+        Toast.makeText(getApplicationContext(), "THE CALL WAS DECLINED", Toast.LENGTH_LONG).show();
+        mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
+        mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
+        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
+        intent.putExtra("UserID", userID);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public void onBackPressed()
     {
@@ -257,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         if(mSubscriber != null)
         {
             mSubscriber = null;
-            disconnect(null);
+//            disconnect(null);
         }
     }
 

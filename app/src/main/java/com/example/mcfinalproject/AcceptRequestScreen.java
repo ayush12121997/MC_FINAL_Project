@@ -32,17 +32,11 @@ public class AcceptRequestScreen extends AppCompatActivity
         setContentView(R.layout.activity_accept_request);
         Intent intent = getIntent();
         userID = intent.getStringExtra("UserID");
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Requests").child(userID);
         Friends_Requests = new ArrayList<String>();
         Friends_Requests_List = findViewById(R.id.holder_list1);
         acceptRequestAdapter = new AcceptRequestAdapter(Friends_Requests, userID, getApplicationContext());
         Friends_Requests_List.setAdapter(acceptRequestAdapter);
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Requests").child(userID);
         mDatabase.addChildEventListener(new ChildEventListener()
         {
             @Override

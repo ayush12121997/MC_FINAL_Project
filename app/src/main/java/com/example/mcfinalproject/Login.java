@@ -36,6 +36,8 @@ public class Login extends AppCompatActivity
         Username = (EditText) findViewById(R.id.EDT1);
         Password = (EditText) findViewById(R.id.EDT2);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.getRoot().child("Users").child("Num_Projects").removeValue();
+        mDatabase.getRoot().child("Users").child("Num_Projects").setValue("4");
         requestPermissions();
     }
 

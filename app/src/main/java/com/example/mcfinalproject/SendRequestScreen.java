@@ -30,19 +30,13 @@ public class SendRequestScreen extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_request);
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         Intent intent = getIntent();
         userID = intent.getStringExtra("UserID");
         Send_Friends_Requests = new ArrayList<String>();
         Send_Friends_Requests_List = findViewById(R.id.holder_list2);
         sendRequestAdapter = new SendRequestAdapter(Send_Friends_Requests, userID, getApplicationContext());
         Send_Friends_Requests_List.setAdapter(sendRequestAdapter);
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mDatabase.addChildEventListener(new ChildEventListener()
         {
             @Override

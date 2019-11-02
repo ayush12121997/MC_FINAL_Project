@@ -112,27 +112,6 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
             };
             handler.postDelayed(runnable, 1250);
         }
-        else
-        {
-            final Handler handler = new Handler();
-            Runnable runnable = new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    if(vibrate)
-                    {
-                        vibrator.vibrate(750);
-                        handler.postDelayed(this, 1250);
-                    }
-                    else
-                    {
-                        handler.removeCallbacks(this);
-                    }
-                }
-            };
-            handler.postDelayed(runnable, 1250);
-        }
     }
 
     public void acceptCall(View view)

@@ -49,12 +49,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         AdtArr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friends);
         friendsList.setAdapter(AdtArr);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Lists").child(userID);
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
         mDatabase.addChildEventListener(new ChildEventListener()
         {
             @Override
@@ -386,7 +380,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         }
 
         this.checkExit = true;
-        Toast.makeText(this, "Click again to logout and exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Click again to logout", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable()
         {
