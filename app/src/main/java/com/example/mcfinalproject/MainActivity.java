@@ -189,9 +189,9 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-        intent.putExtra("UserID", userID);
-        startActivity(intent);
+//        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
+//        intent.putExtra("UserID", userID);
+//        startActivity(intent);
         finish();
     }
 
@@ -209,9 +209,9 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-        intent.putExtra("UserID", userID);
-        startActivity(intent);
+//        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
+//        intent.putExtra("UserID", userID);
+//        startActivity(intent);
         finish();
     }
 

@@ -284,7 +284,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         intent.putExtra("Proj_ID", "Proj_" + String.valueOf(i));
         intent.putExtra("UserID", userID);
         startActivity(intent);
-        finish();
+//        finish();
     }
 
     public void getCallIntent(String name)
@@ -294,7 +294,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         intent.putExtra("CallerName", name);
         intent.putExtra("UserID", userID);
         startActivity(intent);
-        finish();
+//        finish();
     }
 
     private interface FirebaseCallback

@@ -268,9 +268,9 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     public void rejectCall()
     {
         vibrate = false;
-        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-        intent.putExtra("UserID", userID);
-        startActivity(intent);
+//        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
+//        intent.putExtra("UserID", userID);
+//        startActivity(intent);
         finish();
     }
 
