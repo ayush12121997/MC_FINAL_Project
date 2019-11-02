@@ -1,8 +1,5 @@
 package com.example.mcfinalproject;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +11,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class RegistrationScreen extends AppCompatActivity
 {
@@ -41,10 +41,29 @@ public class RegistrationScreen extends AppCompatActivity
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String n = dataSnapshot.child("Num_Users").getValue().toString();
-                    update_db(username, pass, n);
-                    Intent intent = new Intent(getApplicationContext(), Login.class);
-                    startActivity(intent);
-                    finish();
+                    boolean check = false;
+                    for(int i = 0; i < Integer.parseInt(n); i++)
+                    {
+                        String usn = dataSnapshot.child("User_"+String.valueOf(i)).child("Username").getValue().toString();
+                        if(usn.equals(username))
+                        {
+                            check = true;
+                            break;
+                        }
+                    }
+                    if(check)
+                    {
+                        Toast.makeText(getApplicationContext(),"Username already taken",Toast.LENGTH_LONG).show();
+                        UsernameField.setText("");
+                        PasswordField.setText("");
+                    }
+                    else
+                    {
+                        update_db(username, pass, n);
+                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
 
                 @Override
@@ -54,7 +73,7 @@ public class RegistrationScreen extends AppCompatActivity
             });
         }
         else{
-            Toast.makeText(getApplicationContext(),"Username or password cannot be empty!",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Username or password cannot be empty",Toast.LENGTH_LONG).show();
             UsernameField.setText("");
             PasswordField.setText("");
         }

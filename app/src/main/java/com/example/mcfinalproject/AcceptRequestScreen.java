@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -24,6 +23,7 @@ public class AcceptRequestScreen extends AppCompatActivity
     ListView Friends_Requests_List;
     private DatabaseReference mDatabase;
     private String userID;
+    private AcceptRequestAdapter acceptRequestAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -35,8 +35,14 @@ public class AcceptRequestScreen extends AppCompatActivity
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Requests").child(userID);
         Friends_Requests = new ArrayList<String>();
         Friends_Requests_List = findViewById(R.id.holder_list1);
-        final AcceptRequestAdapter acceptRequestAdapter = new AcceptRequestAdapter(Friends_Requests, userID, getApplicationContext());
+        acceptRequestAdapter = new AcceptRequestAdapter(Friends_Requests, userID, getApplicationContext());
         Friends_Requests_List.setAdapter(acceptRequestAdapter);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
         mDatabase.addChildEventListener(new ChildEventListener()
         {
             @Override

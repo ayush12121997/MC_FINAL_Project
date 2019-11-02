@@ -9,15 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SendRequestScreen">
+        <activity android:name=".SendRequestScreen" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".AcceptRequestScreen" />
-        <activity android:name=".IncomingCall">
+        <activity android:name=".AcceptRequestScreen" android:screenOrientation="portrait" />
+        <activity android:name=".IncomingCall" android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".RegistrationScreen" />
-        <activity android:name=".Login">
+        <activity android:name=".RegistrationScreen" android:screenOrientation="portrait"/>
+        <activity android:name=".Login" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,10 +25,10 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".HomeScreen" >
+        <activity android:name=".HomeScreen" android:screenOrientation="portrait">
 
     </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
         </activity>
 
         <meta-data

@@ -30,7 +30,6 @@ import top.defaults.colorpicker.ColorPickerPopup;
 
 public class MainActivity extends AppCompatActivity implements Session.SessionListener, PublisherKit.PublisherListener
 {
-    //    file change
     private static String API_KEY;
     private static String SESSION_ID;
     private static String TOKEN;
@@ -72,11 +71,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        Log.d("fragment", "MainActivity onCreate");
         setContentView(R.layout.activity_main_fragments);
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOptions);
         fragment = new mFragment(1);
         getSupportFragmentManager().beginTransaction().add(R.id.main_fragmentFrame, fragment).commit();
         getSupportFragmentManager().executePendingTransactions();
@@ -106,13 +101,11 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 
             }
         });
-//        checkDrawing();
     }
 
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
     private void requestPermissions()
     {
-        Log.d("fragment", "in requestPermissions");
         String[] perms = {Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
         if(!EasyPermissions.hasPermissions(this, perms))
         {
@@ -187,15 +180,15 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void disconnect(View view)
     {
         mSession.disconnect();
+        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
+        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
+        Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
-        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
-        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
-        Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
         intent.putExtra("UserID", userID);
         startActivity(intent);
@@ -207,14 +200,14 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     {
         super.onBackPressed();
         mSession.disconnect();
+        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
+        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
-        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
-        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
         intent.putExtra("UserID", userID);
@@ -225,7 +218,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
@@ -249,8 +241,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void onStreamReceived(Session session, Stream stream)
     {
         Log.i(LOG_TAG, "Stream Received");
-        Log.d("fragment", "onStreamReceived");
-
         if(mSubscriber == null)
         {
             mSubscriber = new Subscriber.Builder(this, stream).build();
@@ -264,7 +254,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void onStreamDropped(Session session, Stream stream)
     {
         Log.i(LOG_TAG, "Stream Dropped");
-
         if(mSubscriber != null)
         {
             mSubscriber = null;
@@ -327,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl );
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl);
                     ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
                 }
 
@@ -347,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl );
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl);
                     ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
                 }
 
@@ -385,25 +374,21 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         if(Call_From.equals(userID) && subBig)
         {
             ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
-//            ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
             mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
         }
         else if(Call_From.equals(userID) && !subBig)
         {
             ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
-//            ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
             mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
         }
         else if(!Call_From.equals(userID) && subBig)
         {
             ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
-//            ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
             mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
         }
         else
         {
             ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
-//            ((CanvasViewClient) fragment.getCanvasSubClient()).clearCanvas();
             mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
         }
     }

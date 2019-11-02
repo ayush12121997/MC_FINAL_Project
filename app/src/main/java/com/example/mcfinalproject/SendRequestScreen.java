@@ -2,9 +2,6 @@ package com.example.mcfinalproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.Sampler;
-import android.text.method.SingleLineTransformationMethod;
-import android.util.Log;
 import android.widget.ListView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -26,6 +23,7 @@ public class SendRequestScreen extends AppCompatActivity
     private ListView Send_Friends_Requests_List;
     private DatabaseReference mDatabase;
     private String userID;
+    private SendRequestAdapter sendRequestAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,9 +35,14 @@ public class SendRequestScreen extends AppCompatActivity
         userID = intent.getStringExtra("UserID");
         Send_Friends_Requests = new ArrayList<String>();
         Send_Friends_Requests_List = findViewById(R.id.holder_list2);
-        final SendRequestAdapter sendRequestAdapter = new SendRequestAdapter(Send_Friends_Requests, userID, getApplicationContext());
+        sendRequestAdapter = new SendRequestAdapter(Send_Friends_Requests, userID, getApplicationContext());
         Send_Friends_Requests_List.setAdapter(sendRequestAdapter);
+    }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
         mDatabase.addChildEventListener(new ChildEventListener()
         {
             @Override

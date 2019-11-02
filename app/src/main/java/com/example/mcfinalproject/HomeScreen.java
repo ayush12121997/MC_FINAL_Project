@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.util.Log;
+import android.os.Handler;
 import android.widget.ArrayAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,13 +31,14 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
     private String otherID;
     private boolean update;
     private boolean update2;
+    private boolean checkExit = false;
+    private ArrayAdapter<String> AdtArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-
         Intent intent = getIntent();
         userID = intent.getStringExtra("UserID");
         otherID = "";
@@ -45,10 +46,15 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         update2 = false;
         friends = new ArrayList<>();
         friendsList = findViewById(R.id.Friends_List);
-        final ArrayAdapter<String> AdtArr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friends);
+        AdtArr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friends);
         friendsList.setAdapter(AdtArr);
-
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Lists").child(userID);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
         mDatabase.addChildEventListener(new ChildEventListener()
         {
             @Override
@@ -365,5 +371,28 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         intent.putExtra("UserID", userID);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if(checkExit)
+        {
+            finish();
+            super.onBackPressed();
+            return;
+        }
+
+        this.checkExit = true;
+        Toast.makeText(this, "Click again to logout", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                checkExit = false;
+            }
+        }, 2000);
     }
 }

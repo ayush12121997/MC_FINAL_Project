@@ -2,12 +2,10 @@ package com.example.mcfinalproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GestureDetectorCompat;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -31,10 +29,8 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     private String callerName;
     private DatabaseReference mDatabase;
     private String otherID;
-    private GestureDetectorCompat mDetector;
     private VideoView blackhole;
     private GestureDetector GD;
-    private String TAG="TAT";
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -202,7 +198,6 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
             {
             }
         });
-        rejectCall();
     }
 
     public void runAnim()
@@ -245,7 +240,6 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
         if(view.getId()==R.id.blackhole){
-            Log.d(TAG, "dumdudmd!");
             GD.onTouchEvent(motionEvent);
             return true;
         }
@@ -254,43 +248,6 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     @Override
     public boolean onDrag(View view, DragEvent dragEvent) {
-
-/*
-        switch(dragEvent.getAction()) {
-
-            case DragEvent.ACTION_DRAG_STARTED:
-
-
-                return true;
-
-            case DragEvent.ACTION_DRAG_ENTERED:
-
-                return true;
-
-            case DragEvent.ACTION_DRAG_LOCATION:
-
-                return true;
-
-            case DragEvent.ACTION_DRAG_EXITED:
-                return true;
-
-            case DragEvent.ACTION_DROP:
-
-
-                return true;
-
-            case DragEvent.ACTION_DRAG_ENDED:
-
-
-
-                return true;
-
-            // An unknown action type was received.
-            default:
-
-                break;
-
-        }*/
         return true;
     }
 
@@ -307,7 +264,6 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     @Override
     public boolean onSingleTapUp(MotionEvent motionEvent) {
             return false;
-
     }
 
     @Override
@@ -317,25 +273,16 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     @Override
     public void onLongPress(MotionEvent motionEvent) {
-        View.DragShadowBuilder BUILDER=new View.DragShadowBuilder(blackhole);
-        blackhole.startDrag(null,
-                BUILDER,
-                null,
-                0);
-        BUILDER.getView().setOnDragListener(this);
 
     }
 
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        Log.i("TATA",v+" "+v1);
         if(v>30){
-            Log.i("TATA","hi");
             Button X=findViewById(R.id.button3);
             X.performClick();
         }
         else if(v<-30){
-            Log.i("TATA","bye");
             Button X=findViewById(R.id.button4);
             X.performClick();
         }

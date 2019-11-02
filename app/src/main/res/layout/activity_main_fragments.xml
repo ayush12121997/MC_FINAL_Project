@@ -1,83 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/linear_main"
     tools:context=".MainActivity"
-    android:background="#000000"
-    android:padding="10dp"
-    >
+    android:fitsSystemWindows="true"
+    android:background="@color/TitleBlue">
     <FrameLayout
-        android:id="@+id/main_fragmentFrame"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:layout_height="600dp"/>
+        android:layout_height="match_parent"
+        android:id="@+id/linear_main"
+        android:background="@color/TitleBlue"
+        >
+        <FrameLayout
+            android:id="@+id/main_fragmentFrame"
+            android:layout_width="match_parent"
+            android:background="@color/FitGrey"
+            android:layout_height="570dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="590dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/button_send"
+                android:onClick="send"
+                android:layout_width="50dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:background="#00000000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/send_icon_2" />
 
-    <ImageButton
-        android:id="@+id/button_send"
-        android:onClick="send"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="620dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="1"
-        android:adjustViewBounds="true"
-        android:background="#00000000"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/send_icon_2" />
+            <ImageButton
+                android:id="@+id/button_pickcolor"
+                android:onClick="showPallete"
+                android:layout_width="50dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:background="#00000000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/colorwheel_icon" />
 
+            <ImageButton
+                android:id="@+id/button_clear"
+                android:onClick="clearCanvas"
+                android:layout_width="50dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                android:background="#00000000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/clear_icon" />
 
-    <ImageButton
-        android:id="@+id/button_pickcolor"
-        android:onClick="showPallete"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="110dp"
-        android:layout_marginTop="620dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1"
-        android:adjustViewBounds="true"
-        android:background="#00000000"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/colorwheel_icon" />
-
-    <ImageButton
-        android:id="@+id/button_clear"
-        android:onClick="clearCanvas"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="200dp"
-        android:layout_marginTop="620dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="1"
-        android:adjustViewBounds="true"
-        android:background="#00000000"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/clear_icon" />
-
-    <ImageButton
-        android:id="@+id/button_disconnect"
-        android:onClick="disconnect"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="290dp"
-        android:layout_marginTop="620dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1"
-        android:adjustViewBounds="true"
-        android:background="#00000000"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/disconnect_call_png" />
-
-
-</FrameLayout>
+            <ImageButton
+                android:id="@+id/button_disconnect"
+                android:onClick="disconnect"
+                android:layout_weight="1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="#00000000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/disconnect_call_png" />
+        </LinearLayout>
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

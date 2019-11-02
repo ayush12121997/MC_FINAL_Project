@@ -8,7 +8,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -25,6 +25,7 @@ public class Login extends AppCompatActivity
     private EditText Password;
     private DatabaseReference mDatabase;
     private boolean check = true;
+    private boolean checkExit = false;
     private static final int RC_VIDEO_APP_PERM = 124;
 
     @Override
@@ -32,10 +33,8 @@ public class Login extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         Username = (EditText) findViewById(R.id.EDT1);
         Password = (EditText) findViewById(R.id.EDT2);
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
         requestPermissions();
     }
@@ -46,7 +45,7 @@ public class Login extends AppCompatActivity
         String[] perms = {Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
         if(EasyPermissions.hasPermissions(this, perms))
         {
-            // initialize view objects from your layout
+            //Nothing here
         }
         else
         {
@@ -81,6 +80,26 @@ public class Login extends AppCompatActivity
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        String username = Username.getText().toString();
+        outState.putString("usernme", username);
+        String password = Password.getText().toString();
+        outState.putString("password", username);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+        String username = savedInstanceState.getString("username");
+        String password = savedInstanceState.getString("username");
+        Username.setText(username);
+        Password.setText(password);
+    }
+
     public void Authentication_loop(String num, String user, String pass)
     {
         for(int i = 0; i < Integer.parseInt(num); i++)
@@ -106,7 +125,7 @@ public class Login extends AppCompatActivity
                     {
                         Username.setText("");
                         Password.setText("");
-                        Toast.makeText(getApplicationContext(), "PLEASE CHECK YOUR CREDENTIALS.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "PLEASE CHECK YOUR CREDENTIALS", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -124,5 +143,28 @@ public class Login extends AppCompatActivity
         Intent Intent3 = new Intent(getApplicationContext(), RegistrationScreen.class);
         startActivity(Intent3);
         finish();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if(checkExit)
+        {
+            finish();
+            super.onBackPressed();
+            return;
+        }
+
+        this.checkExit = true;
+        Toast.makeText(this, "Click again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                checkExit = false;
+            }
+        }, 2000);
     }
 }
