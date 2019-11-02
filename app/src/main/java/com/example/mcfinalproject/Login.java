@@ -152,8 +152,8 @@ public class Login extends AppCompatActivity
     {
         if(checkExit)
         {
-            finish();
             super.onBackPressed();
+            finish();
             return;
         }
 

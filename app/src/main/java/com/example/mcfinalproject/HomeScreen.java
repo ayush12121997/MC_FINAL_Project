@@ -372,10 +372,10 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
     {
         if(checkExit)
         {
+            super.onBackPressed();
             Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
-            super.onBackPressed();
             return;
         }
 

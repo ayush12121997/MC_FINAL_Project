@@ -80,7 +80,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                 String check = dataSnapshot.getValue().toString();
                 if(check.equals("None"))
                 {
-                    Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "THE SESSION WAS DISCONNECTED", Toast.LENGTH_LONG).show();
                     rejectCall();
                 }
             }

@@ -2,6 +2,7 @@ package com.example.mcfinalproject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -59,6 +60,7 @@ public class RegistrationScreen extends AppCompatActivity
                     }
                     else
                     {
+                        Log.i("What happs", "lol");
                         update_db(username, pass, n);
                         Intent intent = new Intent(getApplicationContext(), Login.class);
                         startActivity(intent);

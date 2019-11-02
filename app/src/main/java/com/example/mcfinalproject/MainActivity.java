@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.renderscript.Sampler;
-import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -44,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     private String Call_To = "";
     private String Proj = "";
     private String userID;
-    private boolean pleaseWork;
     private mFragment fragment;
     private boolean subBig = true;
 
@@ -72,17 +69,17 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Log.d("fragment", "MainActivity onCreate");
         setContentView(R.layout.activity_main_fragments);
         fragment = new mFragment(1);
         getSupportFragmentManager().beginTransaction().add(R.id.main_fragmentFrame, fragment).commit();
         getSupportFragmentManager().executePendingTransactions();
+        requestPermissions();
         Intent intent = getIntent();
-        pleaseWork = true;
         Call_From = intent.getStringExtra("CallFrom");
         Call_To = intent.getStringExtra("CallTo");
         Proj = intent.getStringExtra("Proj_ID");
         userID = intent.getStringExtra("UserID");
-        requestPermissions();
         connectCall();
         mDatabase = mDatabase.getRoot().child("Recieve_User").child(Call_To);
         mDatabase.addValueEventListener(new ValueEventListener()
@@ -91,9 +88,9 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 String check = dataSnapshot.getValue().toString();
-                if(check.equals("None") && pleaseWork)
+                if(check.equals("None"))
                 {
-                    declined();
+                    disconnect(null);
                 }
             }
 
@@ -105,26 +102,10 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         });
     }
 
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        pleaseWork = false;
-        //Check
-        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
-        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
-        mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
-        mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
-        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
-        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
-        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
-        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
-        finish();
-    }
-
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
     private void requestPermissions()
     {
+        Log.d("fragment", "in requestPermissions");
         String[] perms = {Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
         if(!EasyPermissions.hasPermissions(this, perms))
         {
@@ -199,33 +180,15 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void disconnect(View view)
     {
         mSession.disconnect();
-        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
-        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
-        Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
-        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-        intent.putExtra("UserID", userID);
-        startActivity(intent);
-        finish();
-    }
-
-    public void declined()
-    {
-        mSession.disconnect();
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
-        Toast.makeText(getApplicationContext(), "THE CALL WAS DECLINED", Toast.LENGTH_LONG).show();
-        mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
-        mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
-        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
-        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
-        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
-        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
+        Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
         intent.putExtra("UserID", userID);
         startActivity(intent);
@@ -237,15 +200,15 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     {
         super.onBackPressed();
         mSession.disconnect();
-        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
-        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
-        Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
+        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
+        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
+        Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
         intent.putExtra("UserID", userID);
         startActivity(intent);
@@ -255,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
@@ -278,6 +242,8 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void onStreamReceived(Session session, Stream stream)
     {
         Log.i(LOG_TAG, "Stream Received");
+        Log.d("fragment", "onStreamReceived");
+
         if(mSubscriber == null)
         {
             mSubscriber = new Subscriber.Builder(this, stream).build();
@@ -291,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void onStreamDropped(Session session, Stream stream)
     {
         Log.i(LOG_TAG, "Stream Dropped");
+
         if(mSubscriber != null)
         {
             mSubscriber = null;
@@ -353,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl);
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl );
                     ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
                 }
 
@@ -373,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl);
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl );
                     ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
                 }
 
