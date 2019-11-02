@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -23,7 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class IncomingCall extends AppCompatActivity implements View.OnTouchListener,View.OnDragListener,GestureDetector.OnGestureListener
+public class IncomingCall extends AppCompatActivity implements View.OnTouchListener, View.OnDragListener, GestureDetector.OnGestureListener
 {
     private String userID;
     private String callerName;
@@ -31,30 +35,41 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     private String otherID;
     private VideoView blackhole;
     private GestureDetector GD;
+    private Vibrator vibrator;
+    private boolean vibrate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incoming_call);
-        blackhole=findViewById(R.id.blackhole);
-        blackhole.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                blackhole.start();
-            }
-        });
-        blackhole.setVideoPath("android.resource://"+getPackageName()+"/"+R.raw.videox);
-        blackhole.start();
-        blackhole.setOnTouchListener(this);
-
-        GD=new GestureDetector(this,this);
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
         Intent intent = getIntent();
         callerName = intent.getStringExtra("CallerName");
         ((TextView) findViewById(R.id.incomingCallText)).setText(callerName);
         userID = intent.getStringExtra("UserID");
         otherID = "";
+        vibrate = true;
+        blackhole = findViewById(R.id.blackhole);
+        GD = new GestureDetector(this, this);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        blackhole.setVideoPath("android.resource://" + getPackageName() + "/" + R.raw.videox);
+        blackhole.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+        {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer)
+            {
+                blackhole.start();
+            }
+        });
+        blackhole.start();
+        blackhole.setOnTouchListener(this);
         runAnim();
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
         mDatabase.addValueEventListener(new ValueEventListener()
@@ -76,6 +91,48 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
             }
         });
+        if(Build.VERSION.SDK_INT >= 26)
+        {
+            final Handler handler = new Handler();
+            Runnable runnable = new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if(vibrate)
+                    {
+                        vibrator.vibrate(VibrationEffect.createOneShot(750, VibrationEffect.DEFAULT_AMPLITUDE));
+                        handler.postDelayed(this, 1250);
+                    }
+                    else
+                    {
+                        handler.removeCallbacks(this);
+                    }
+                }
+            };
+            handler.postDelayed(runnable, 1250);
+        }
+        else
+        {
+            final Handler handler = new Handler();
+            Runnable runnable = new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    if(vibrate)
+                    {
+                        vibrator.vibrate(750);
+                        handler.postDelayed(this, 1250);
+                    }
+                    else
+                    {
+                        handler.removeCallbacks(this);
+                    }
+                }
+            };
+            handler.postDelayed(runnable, 1250);
+        }
     }
 
     public void acceptCall(View view)
@@ -219,6 +276,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     public void connectCall(int i)
     {
+        vibrate = false;
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("CallTo", userID);
         intent.putExtra("CallFrom", otherID);
@@ -230,6 +288,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     public void rejectCall()
     {
+        vibrate = false;
         Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
         intent.putExtra("UserID", userID);
         startActivity(intent);
@@ -237,9 +296,11 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public boolean onTouch(View view, MotionEvent motionEvent)
+    {
 
-        if(view.getId()==R.id.blackhole){
+        if(view.getId() == R.id.blackhole)
+        {
             GD.onTouchEvent(motionEvent);
             return true;
         }
@@ -247,43 +308,52 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     }
 
     @Override
-    public boolean onDrag(View view, DragEvent dragEvent) {
+    public boolean onDrag(View view, DragEvent dragEvent)
+    {
         return true;
     }
 
     @Override
-    public boolean onDown(MotionEvent motionEvent) {
+    public boolean onDown(MotionEvent motionEvent)
+    {
         return false;
     }
 
     @Override
-    public void onShowPress(MotionEvent motionEvent) {
+    public void onShowPress(MotionEvent motionEvent)
+    {
 
     }
 
     @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-            return false;
+    public boolean onSingleTapUp(MotionEvent motionEvent)
+    {
+        return false;
     }
 
     @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-            return false;
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1)
+    {
+        return false;
     }
 
     @Override
-    public void onLongPress(MotionEvent motionEvent) {
+    public void onLongPress(MotionEvent motionEvent)
+    {
 
     }
 
     @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        if(v>30){
-            Button X=findViewById(R.id.button3);
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1)
+    {
+        if(v > 30)
+        {
+            Button X = findViewById(R.id.button3);
             X.performClick();
         }
-        else if(v<-30){
-            Button X=findViewById(R.id.button4);
+        else if(v < -30)
+        {
+            Button X = findViewById(R.id.button4);
             X.performClick();
         }
         return true;

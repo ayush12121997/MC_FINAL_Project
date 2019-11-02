@@ -378,13 +378,15 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
     {
         if(checkExit)
         {
+            Intent intent = new Intent(getApplicationContext(), Login.class);
+            startActivity(intent);
             finish();
             super.onBackPressed();
             return;
         }
 
         this.checkExit = true;
-        Toast.makeText(this, "Click again to logout", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Click again to logout and exit", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable()
         {
