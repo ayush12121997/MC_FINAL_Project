@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">VideoCallApplication</string>
+    <string name="app_name">ViDraw</string>
     <string name="login">Login</string>
     <string name="login_hint">Username</string>
     <string name="call_message1">No Incoming Call</string>
