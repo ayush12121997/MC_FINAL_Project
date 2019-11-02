@@ -29,7 +29,7 @@
             android:id="@+id/holder_list2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/solid_borders"
+            android:background="@drawable/solid_borders2"
             >
         </ListView>
 

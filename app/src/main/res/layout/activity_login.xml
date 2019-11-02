@@ -35,7 +35,7 @@
             android:layout_marginTop="15dp"
             android:src="@drawable/ayush"
             android:scaleX="-1"
-            ></ImageView>
+           />
 
         <TextView
             android:layout_width="match_parent"
