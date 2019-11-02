@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     {
         super.onPause();
         pleaseWork = false;
+        //Check
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
