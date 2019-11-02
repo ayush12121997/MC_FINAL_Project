@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     private String Call_To = "";
     private String Proj = "";
     private String userID;
+    private boolean pleaseWork;
     private mFragment fragment;
     private boolean subBig = true;
 
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         getSupportFragmentManager().beginTransaction().add(R.id.main_fragmentFrame, fragment).commit();
         getSupportFragmentManager().executePendingTransactions();
         Intent intent = getIntent();
+        pleaseWork = true;
         Call_From = intent.getStringExtra("CallFrom");
         Call_To = intent.getStringExtra("CallTo");
         Proj = intent.getStringExtra("Proj_ID");
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 String check = dataSnapshot.getValue().toString();
-                if(check.equals("None"))
+                if(check.equals("None") && pleaseWork)
                 {
                     declined();
                 }
@@ -101,6 +103,22 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 
             }
         });
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        pleaseWork = false;
+        mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
+        mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
+        mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
+        mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue("");
+        mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue("");
+        finish();
     }
 
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
