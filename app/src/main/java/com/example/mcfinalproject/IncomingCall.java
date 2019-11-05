@@ -37,6 +37,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     private GestureDetector GD;
     private Vibrator vibrator;
     private boolean vibrate;
+    private boolean notReceiving = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,17 +49,12 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
         ((TextView) findViewById(R.id.incomingCallText)).setText(callerName);
         userID = intent.getStringExtra("UserID");
         otherID = "";
+        notReceiving = true;
         vibrate = true;
         blackhole = findViewById(R.id.blackhole);
         GD = new GestureDetector(this, this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
         blackhole.setVideoPath("android.resource://" + getPackageName() + "/" + R.raw.videox);
         blackhole.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
         {
@@ -71,30 +67,71 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
         blackhole.start();
         blackhole.setOnTouchListener(this);
         runAnim();
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
-        mDatabase.addValueEventListener(new ValueEventListener()
+
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable()
         {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            public void run()
             {
-                String check = dataSnapshot.getValue().toString();
-                if(check.equals("None"))
+                if(notReceiving)
                 {
-                    Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
-                    rejectCall();
+                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
+                    mDatabase.addValueEventListener(new ValueEventListener()
+                    {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        {
+                            String check = dataSnapshot.getValue().toString();
+                            if(check.equals("None"))
+                            {
+                                notReceiving = false;
+                                Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_SHORT).show();
+                                rejectCall();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError)
+                        {
+
+                        }
+                    });
+                    handler.postDelayed(this, 1500);
+                }
+                else
+                {
+                    handler.removeCallbacks(this);
                 }
             }
+        };
+        handler.postDelayed(runnable, 1500);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
+//        mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
+//        mDatabase.addValueEventListener(new ValueEventListener()
+//        {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+//            {
+//                String check = dataSnapshot.getValue().toString();
+//                if(check.equals("None"))
+//                {
+//                    Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
+//                    rejectCall();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError)
+//            {
+//
+//            }
+//        });
 
-            }
-        });
         if(Build.VERSION.SDK_INT >= 26)
         {
-            final Handler handler = new Handler();
-            Runnable runnable = new Runnable()
+            final Handler handler2 = new Handler();
+            Runnable runnable2 = new Runnable()
             {
                 @Override
                 public void run()
@@ -102,16 +139,22 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                     if(vibrate)
                     {
                         vibrator.vibrate(VibrationEffect.createOneShot(750, VibrationEffect.DEFAULT_AMPLITUDE));
-                        handler.postDelayed(this, 1250);
+                        handler2.postDelayed(this, 1250);
                     }
                     else
                     {
-                        handler.removeCallbacks(this);
+                        handler2.removeCallbacks(this);
                     }
                 }
             };
-            handler.postDelayed(runnable, 1250);
+            handler2.postDelayed(runnable2, 1250);
         }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
     }
 
     public void acceptCall(View view)
@@ -255,6 +298,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     public void connectCall(int i)
     {
+        notReceiving = false;
         vibrate = false;
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("CallTo", userID);
@@ -267,10 +311,8 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     public void rejectCall()
     {
+        notReceiving = false;
         vibrate = false;
-//        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-//        intent.putExtra("UserID", userID);
-//        startActivity(intent);
         finish();
     }
 

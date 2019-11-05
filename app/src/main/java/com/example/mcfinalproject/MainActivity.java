@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     private String Call_From = "";
     private String Call_To = "";
     private String Proj = "";
+    private boolean connected = true;
     private String userID;
     private mFragment fragment;
     private boolean subBig = true;
@@ -81,25 +83,79 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         Proj = intent.getStringExtra("Proj_ID");
         userID = intent.getStringExtra("UserID");
         connectCall();
-        mDatabase = mDatabase.getRoot().child("Recieve_User").child(Call_To);
-        mDatabase.addValueEventListener(new ValueEventListener()
+
+
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable()
         {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            public void run()
             {
-                String check = dataSnapshot.getValue().toString();
-                if(check.equals("None"))
+                if(connected)
                 {
-                    disconnect(null);
+                    mDatabase = mDatabase.getRoot().child("Recieve_User").child(Call_To);
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                    {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        {
+                            String check = dataSnapshot.getValue().toString();
+                            if(check.equals("None"))
+                            {
+                                connected = false;
+                                disconnect(null);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError)
+                        {
+
+                        }
+                    });
+                    handler.postDelayed(this, 1500);
+                }
+                else
+                {
+                    handler.removeCallbacks(this);
                 }
             }
+        };
+        handler.postDelayed(runnable, 1500);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
+//        mDatabase = mDatabase.getRoot().child("Recieve_User").child(Call_To);
+//        mDatabase.addValueEventListener(new ValueEventListener()
+//        {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+//            {
+//                String check = dataSnapshot.getValue().toString();
+//                if(check.equals("None"))
+//                {
+//                    disconnect(null);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError)
+//            {
+//
+//            }
+//        });
+    }
 
-            }
-        });
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        disconnect(null);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        connected = true;
     }
 
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
@@ -140,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         new ColorPickerPopup.Builder(this).initialColor(Color.RED) // Set initial color
                 .enableBrightness(true) // Enable brightness slider or not
                 .enableAlpha(true) // Enable alpha slider or not
-                .okTitle("Choose").cancelTitle("Cancel").showIndicator(true).showValue(true).build().show(new ColorPickerPopup.ColorPickerObserver()
+                .okTitle("CHOOSE").cancelTitle("CANCEL").showIndicator(true).showValue(true).build().show(new ColorPickerPopup.ColorPickerObserver()
         {
             @Override
             public void onColorPicked(int color)
@@ -180,6 +236,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public void disconnect(View view)
     {
         mSession.disconnect();
+        connected = false;
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
@@ -189,9 +246,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-//        intent.putExtra("UserID", userID);
-//        startActivity(intent);
         finish();
     }
 
@@ -200,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     {
         super.onBackPressed();
         mSession.disconnect();
+        connected = false;
         mDatabase.getRoot().child("Connections").child(Proj).child("User_1").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("User_2").setValue("None");
         mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1").setValue("");
@@ -209,9 +264,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         mDatabase.getRoot().child("Call_User").child(Call_From).setValue("None");
         mDatabase.getRoot().child("Recieve_User").child(Call_To).setValue("None");
         Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
-//        intent.putExtra("UserID", userID);
-//        startActivity(intent);
         finish();
     }
 
@@ -261,7 +313,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         if(mSubscriber != null)
         {
             mSubscriber = null;
-//            disconnect(null);
         }
     }
 
