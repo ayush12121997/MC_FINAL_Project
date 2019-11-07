@@ -7,8 +7,10 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -36,8 +38,6 @@ public class Login extends AppCompatActivity
         Username = (EditText) findViewById(R.id.EDT1);
         Password = (EditText) findViewById(R.id.EDT2);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-//        mDatabase.getRoot().child("Users").child("Num_Projects").removeValue();
-//        mDatabase.getRoot().child("Users").child("Num_Projects").setValue("4");
         requestPermissions();
     }
 

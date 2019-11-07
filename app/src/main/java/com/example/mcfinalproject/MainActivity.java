@@ -3,6 +3,7 @@ package com.example.mcfinalproject;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -67,8 +68,16 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public TextureView getPublisherView()
     {
         TextureView view = (TextureView) getmPublisher().getView();
-        view.setScaleX(-1);
-        return view;
+        if(isPhone())
+        {
+            view.setScaleX(-1);
+            return view;
+        }
+        else
+        {
+            return view;
+        }
+
     }
 
     public TextureView getSubscriberView()
@@ -81,13 +90,16 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         return mSubscriber;
     }
 
-    public boolean isCaller()
+    public boolean isPhone()
     {
-        if(Call_From.equals(userID))
+        if((Build.DEVICE).startsWith("generic") || (Build.DEVICE).contains("Android SDK built for x86"))
+        {
+            return false;
+        }
+        else
         {
             return true;
         }
-        return false;
     }
 
     @Override
@@ -198,9 +210,11 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 SESSION_ID = SESSION;
                 TOKEN = token;
                 final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                handler.postDelayed(new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         makeConnection();
                     }
                 }, 500);
@@ -241,9 +255,11 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         Log.i("LastCheck - makeConnection - APIKEY", API_KEY);
         Log.i("LastCheck - makeConnection - SESSION ID", SESSION_ID);
         Log.i("LastCheck - makeConnection - TOKEN", TOKEN);
-        mSession = new Session.Builder(this, API_KEY, SESSION_ID).sessionOptions(new Session.SessionOptions() {
+        mSession = new Session.Builder(this, API_KEY, SESSION_ID).sessionOptions(new Session.SessionOptions()
+        {
             @Override
-            public boolean useTextureViews() {
+            public boolean useTextureViews()
+            {
                 return true;
             }
         }).build();
@@ -322,7 +338,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     {
         Log.i(LOG_TAG, "Stream Received");
         Log.d("fragment", "onStreamReceived");
-
         if(mSubscriber == null)
         {
             mSubscriber = new Subscriber.Builder(this, stream).build();
@@ -401,7 +416,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl );
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl);
                     ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
                 }
 
@@ -421,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                 {
                     String curr = dataSnapshot.getValue().toString();
-                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl );
+                    mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2").setValue(curr + ((CanvasViewClient) fragment.getCanvasPubClient()).pl);
                     ((CanvasViewClient) fragment.getCanvasPubClient()).clearCanvas();
                 }
 
@@ -573,140 +588,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             }
         };
         handler.postDelayed(runnable, 1000);
-
-//        if(!Call_From.equals(userID))
-//        {
-//            mDatabase = FirebaseDatabase.getInstance().getReference().child("Connections").child(Proj).child("Draw_Sub2");
-//            mDatabase.addValueEventListener(new ValueEventListener()
-//            {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                {
-//                    String sub2 = dataSnapshot.getValue().toString();
-//                    mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1");
-//                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-//                    {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                        {
-//                            String pub1 = dataSnapshot.getValue().toString();
-//                            fbcb2.onCallback2(sub2, pub1);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError)
-//                        {
-//
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError)
-//                {
-//
-//                }
-//            });
-//            mDatabase = FirebaseDatabase.getInstance().getReference();
-//            mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1");
-//            mDatabase.addValueEventListener(new ValueEventListener()
-//            {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                {
-//                    String pub1 = dataSnapshot.getValue().toString();
-//                    mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2");
-//                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-//                    {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                        {
-//                            String sub2 = dataSnapshot.getValue().toString();
-//                            fbcb2.onCallback2(pub1, sub2);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError)
-//                        {
-//
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError)
-//                {
-//
-//                }
-//            });
-//        }
-//        else
-//        {
-//            mDatabase = FirebaseDatabase.getInstance().getReference();
-//            mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1");
-//            mDatabase.addValueEventListener(new ValueEventListener()
-//            {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                {
-//                    String sub1 = dataSnapshot.getValue().toString();
-//                    mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2");
-//                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-//                    {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                        {
-//                            String pub2 = dataSnapshot.getValue().toString();
-//                            fbcb2.onCallback2(sub1, pub2);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError)
-//                        {
-//
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError)
-//                {
-//
-//                }
-//            });
-//            mDatabase = FirebaseDatabase.getInstance().getReference();
-//            mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2");
-//            mDatabase.addValueEventListener(new ValueEventListener()
-//            {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                {
-//                    String pub2 = dataSnapshot.getValue().toString();
-//                    mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1");
-//                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-//                    {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                        {
-//                            String sub1 = dataSnapshot.getValue().toString();
-//                            fbcb2.onCallback2(pub2, sub1);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError)
-//                        {
-//
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError)
-//                {
-//
-//                }
-//            });
-//        }
     }
 
     public void getDrawingPub(FirebaseCallback2 fbcb2)
@@ -800,141 +681,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
             }
         };
         handler.postDelayed(runnable, 1000);
-
-//        if(Call_From.equals(userID))
-//        {
-//            mDatabase = FirebaseDatabase.getInstance().getReference();
-//            mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2");
-//            mDatabase.addValueEventListener(new ValueEventListener()
-//            {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                {
-//                    String sub2 = dataSnapshot.getValue().toString();
-//                    mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1");
-//                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-//                    {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                        {
-//                            String pub1 = dataSnapshot.getValue().toString();
-//                            fbcb2.onCallback2(sub2, pub1);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError)
-//                        {
-//
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError)
-//                {
-//
-//                }
-//            });
-//            mDatabase = FirebaseDatabase.getInstance().getReference();
-//            mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub1");
-//            mDatabase.addValueEventListener(new ValueEventListener()
-//            {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                {
-//                    String pub1 = dataSnapshot.getValue().toString();
-//                    mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub2");
-//                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-//                    {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                        {
-//                            String sub2 = dataSnapshot.getValue().toString();
-//                            fbcb2.onCallback2(pub1, sub2);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError)
-//                        {
-//
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError)
-//                {
-//
-//                }
-//            });
-//        }
-//        else
-//        {
-//            mDatabase = FirebaseDatabase.getInstance().getReference();
-//            mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1");
-//            mDatabase.addValueEventListener(new ValueEventListener()
-//            {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                {
-//                    String sub1 = dataSnapshot.getValue().toString();
-//                    mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2");
-//                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-//                    {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                        {
-//                            String pub2 = dataSnapshot.getValue().toString();
-//                            fbcb2.onCallback2(sub1, pub2);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError)
-//                        {
-//
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError)
-//                {
-//
-//                }
-//            });
-//            mDatabase = FirebaseDatabase.getInstance().getReference();
-//            mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Pub2");
-//            mDatabase.addValueEventListener(new ValueEventListener()
-//            {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                {
-//                    String pub2 = dataSnapshot.getValue().toString();
-//                    mDatabase = mDatabase.getRoot().child("Connections").child(Proj).child("Draw_Sub1");
-//                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
-//                    {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//                        {
-//                            String sub1 = dataSnapshot.getValue().toString();
-//                            fbcb2.onCallback2(pub2, sub1);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError)
-//                        {
-//
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError)
-//                {
-//
-//                }
-//            });
-//        }
     }
 
     private interface FirebaseCallback2

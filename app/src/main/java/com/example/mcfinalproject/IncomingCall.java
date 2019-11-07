@@ -115,27 +115,6 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
         };
         handler.postDelayed(runnable, 1500);
 
-//        mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
-//        mDatabase.addValueEventListener(new ValueEventListener()
-//        {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-//            {
-//                String check = dataSnapshot.getValue().toString();
-//                if(check.equals("None"))
-//                {
-//                    Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_LONG).show();
-//                    rejectCall();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError)
-//            {
-//
-//            }
-//        });
-
         if(Build.VERSION.SDK_INT >= 26)
         {
             final Handler handler2 = new Handler();

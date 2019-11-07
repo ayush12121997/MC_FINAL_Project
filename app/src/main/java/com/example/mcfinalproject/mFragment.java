@@ -84,11 +84,6 @@ public class mFragment extends Fragment {
         FrameLayout mSubContainer = view.findViewById(R.id.subscriber_container);
         FrameLayout mPubContainer = view.findViewById(R.id.publisher_container);
         Log.d("fragment","onViewCreated, config "+configuration);
-//        if(!((MainActivity)getActivity()).isCaller())
-//        {
-//            frameLayout2.findViewById(R.id.canvasSubClient).setScaleX(-1);
-//            frameLayout2.findViewById(R.id.canvasSubServer).setScaleX(-1);
-//        }
         frameLayout2.setOnClickListener(v->{
             if(configuration==-1)
             {
@@ -98,12 +93,10 @@ public class mFragment extends Fragment {
                 removePublisher();
                 removeSubscriber();
 
-//                androidx.fragment.app.Fragment fragment2 = new Fragment2();
                 getFragmentManager()
                         .beginTransaction()
                         .addSharedElement(frameLayout2, ViewCompat.getTransitionName(frameLayout2))
                         .addSharedElement(frameLayout3, ViewCompat.getTransitionName(frameLayout3))
-//                        .addToBackStack(TAG)
                         .replace(R.id.main_fragmentFrame, invertedFragment)
                         .commit();
                 getFragmentManager().executePendingTransactions();
@@ -118,12 +111,10 @@ public class mFragment extends Fragment {
                 removePublisher();
                 removeSubscriber();
 
-//                androidx.fragment.app.Fragment fragment2 = new Fragment2();
                 getFragmentManager()
                         .beginTransaction()
                         .addSharedElement(frameLayout2, ViewCompat.getTransitionName(frameLayout2))
                         .addSharedElement(frameLayout3, ViewCompat.getTransitionName(frameLayout3))
-//                        .addToBackStack(TAG)
                         .replace(R.id.main_fragmentFrame, invertedFragment)
                         .commit();
                 getFragmentManager().executePendingTransactions();
