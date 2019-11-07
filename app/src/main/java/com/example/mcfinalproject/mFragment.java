@@ -1,24 +1,20 @@
 package com.example.mcfinalproject;
 
-import android.content.Context;
+import android.graphics.Matrix;
+import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-
-import static com.android.volley.VolleyLog.TAG;
 
 public class mFragment extends Fragment {
     private int configuration;
@@ -34,13 +30,14 @@ public class mFragment extends Fragment {
         {
             if(configuration==-1)
             {
-                addPublisher(((MainActivity)getActivity()).getmPublisher().getView());
-                addSubscriber(((MainActivity)getActivity()).getmSubscriber().getView());
+
+                addPublisher(((MainActivity)getActivity()).getPublisherView());
+                addSubscriber(((MainActivity)getActivity()).getSubscriberView());
             }
             else
             {
-                addSubscriber(((MainActivity)getActivity()).getmSubscriber().getView());
-                addPublisher(((MainActivity)getActivity()).getmPublisher().getView());
+                addSubscriber(((MainActivity)getActivity()).getSubscriberView());
+                addPublisher(((MainActivity)getActivity()).getPublisherView());
             }
         }
 //        ((MainActivity)getActivity()).afterFragmentLoaded();
@@ -87,11 +84,11 @@ public class mFragment extends Fragment {
         FrameLayout mSubContainer = view.findViewById(R.id.subscriber_container);
         FrameLayout mPubContainer = view.findViewById(R.id.publisher_container);
         Log.d("fragment","onViewCreated, config "+configuration);
-        if(!((MainActivity)getActivity()).isCaller())
-        {
-            frameLayout2.findViewById(R.id.canvasSubClient).setScaleX(-1);
-            frameLayout2.findViewById(R.id.canvasSubServer).setScaleX(-1);
-        }
+//        if(!((MainActivity)getActivity()).isCaller())
+//        {
+//            frameLayout2.findViewById(R.id.canvasSubClient).setScaleX(-1);
+//            frameLayout2.findViewById(R.id.canvasSubServer).setScaleX(-1);
+//        }
         frameLayout2.setOnClickListener(v->{
             if(configuration==-1)
             {

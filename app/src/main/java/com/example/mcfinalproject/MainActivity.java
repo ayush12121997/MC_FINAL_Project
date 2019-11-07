@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.Toast;
 
@@ -61,6 +62,18 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     public Publisher getmPublisher()
     {
         return mPublisher;
+    }
+
+    public TextureView getPublisherView()
+    {
+        TextureView view = (TextureView) getmPublisher().getView();
+        view.setScaleX(-1);
+        return view;
+    }
+
+    public TextureView getSubscriberView()
+    {
+        return (TextureView) getmSubscriber().getView();
     }
 
     public Subscriber getmSubscriber()
@@ -228,7 +241,13 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         Log.i("LastCheck - makeConnection - APIKEY", API_KEY);
         Log.i("LastCheck - makeConnection - SESSION ID", SESSION_ID);
         Log.i("LastCheck - makeConnection - TOKEN", TOKEN);
-        mSession = new Session.Builder(this, API_KEY, SESSION_ID).build();
+        mSession = new Session.Builder(this, API_KEY, SESSION_ID).sessionOptions(new Session.SessionOptions() {
+            @Override
+            public boolean useTextureViews() {
+                return true;
+            }
+        }).build();
+
         mSession.setSessionListener(this);
         mSession.connect(TOKEN);
     }
@@ -308,8 +327,8 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
         {
             mSubscriber = new Subscriber.Builder(this, stream).build();
             mSession.subscribe(mSubscriber);
-            ((mFragment) fragment).addSubscriber(mSubscriber.getView());
-            ((mFragment) fragment).addPublisher(mPublisher.getView());
+            ((mFragment) fragment).addSubscriber(getSubscriberView());
+            ((mFragment) fragment).addPublisher(getPublisherView());
         }
     }
 
@@ -333,7 +352,6 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
     @Override
     public void onStreamCreated(PublisherKit publisherKit, Stream stream)
     {
-
     }
 
     @Override
