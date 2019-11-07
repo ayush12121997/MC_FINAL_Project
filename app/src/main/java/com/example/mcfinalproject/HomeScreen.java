@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +33,8 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
     private boolean update;
     private boolean update2;
     private boolean checkExit = false;
+    private boolean notReceiving = true;
+    private boolean alreadyReceived;
     private ArrayAdapter<String> AdtArr;
 
     @Override
@@ -44,10 +47,14 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         otherID = "";
         update = false;
         update2 = false;
+        notReceiving = true;
+        alreadyReceived = false;
         friends = new ArrayList<>();
         friendsList = findViewById(R.id.Friends_List);
         AdtArr = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, friends);
         friendsList.setAdapter(AdtArr);
+        Log.i("LastCheck - HS - Initialised User ID", userID);
+        Log.i("LastCheck - HS - Initialised User ID", otherID);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_Lists").child(userID);
         mDatabase.addChildEventListener(new ChildEventListener()
         {
@@ -97,14 +104,24 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             {
             }
         });
+        friendsList.setOnItemClickListener(this);
+    }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        notReceiving = true;
+        alreadyReceived = false;
         updateRecievingCall(new FirebaseCallback2()
         {
             @Override
             public void onCallback(String i)
             {
+                Log.i("LastCheck - HS - Not Receiving before getCallerName", String.valueOf(notReceiving));
                 if(!i.equals("None"))
                 {
+                    notReceiving = false;
                     getCallerName(new FirebaseCallback3()
                     {
                         @Override
@@ -116,12 +133,12 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                 }
             }
         });
-        friendsList.setOnItemClickListener(this);
     }
 
     public void onItemClick(AdapterView<?> L, View v, int position, long id)
     {
         String name = friends.get(position);
+        Log.i("LastCheck - HS - name searching for in onClick", name);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Num_Users");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
         {
@@ -133,14 +150,15 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                 for(int i = 0; i < Integer.parseInt(number); i++)
                 {
                     String num = String.valueOf(i);
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
-                    mDatabase = mDatabase.child("Users").child("User_" + num);
+                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("User_" + num);
                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                     {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot3)
                         {
-                            String otherName = dataSnapshot.child("Username").getValue().toString();
+                            Log.i("LastCheck - HS - Checking for user in onClick", "User_" + num);
+                            String otherName = dataSnapshot3.child("Username").getValue().toString();
+                            Log.i("LastCheck - HS - Name found in onClick", otherName);
                             if(name.equals(otherName))
                             {
                                 if(update2)
@@ -151,59 +169,66 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                 {
                                     update2 = true;
                                 }
-                                otherID = dataSnapshot.getKey();
-                                mDatabase = mDatabase.getRoot();
-                                mDatabase = mDatabase.child("Call_User").child(otherID);
-                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                                otherID = dataSnapshot3.getKey();
+                                Log.i("LastCheck - HS - otherID of name found in onClick", otherID);
+                                if(!otherID.contains("P"))
                                 {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Call_User").child(otherID);
+                                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                                     {
-                                        String check = dataSnapshot.getValue().toString();
-                                        if(check.equals("None"))
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot4)
                                         {
-                                            mDatabase = mDatabase.getRoot();
-                                            mDatabase = mDatabase.child("Recieve_User").child(otherID);
-                                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                                            String check = dataSnapshot4.getValue().toString();
+                                            Log.i("LastCheck - HS - Check business 1 in onClick", check);
+                                            if(check.equals("None"))
                                             {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                                                mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(otherID);
+                                                mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                                                 {
-                                                    String check = dataSnapshot.getValue().toString();
-                                                    if(!check.equals("None"))
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot2)
                                                     {
-                                                        ShowBusy();
-                                                        return;
-                                                    }
-                                                    mDatabase.getRoot().child("Call_User").child(userID).setValue(otherID);
-                                                    mDatabase.getRoot().child("Recieve_User").child(otherID).setValue(userID);
-                                                    MakeCall(new FirebaseCallback()
-                                                    {
-                                                        @Override
-                                                        public void onCallback(int i)
+                                                        String check2 = dataSnapshot2.getValue().toString();
+                                                        Log.i("LastCheck - HS - Check business 2 in onClick", check2);
+                                                        if(!check2.equals("None"))
                                                         {
-                                                            makeCallIntent(i);
+                                                            ShowBusy();
+                                                            return;
                                                         }
-                                                    });
-                                                }
+                                                        Log.i("LastCheck - HS - userID before setting in onClick", userID);
+                                                        Log.i("LastCheck - HS - otherID before setting in onClick", otherID);
+                                                        mDatabase.getRoot().child("Call_User").child(userID).setValue(otherID);
+                                                        mDatabase.getRoot().child("Recieve_User").child(otherID).setValue(userID);
+                                                        notReceiving = false;
+                                                        MakeCall(new FirebaseCallback()
+                                                        {
+                                                            @Override
+                                                            public void onCallback(int i)
+                                                            {
+                                                                makeCallIntent(i);
+                                                            }
+                                                        });
+                                                    }
 
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError)
-                                                {
-                                                }
-                                            });
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError)
+                                                    {
+                                                    }
+                                                });
+                                            }
+                                            else
+                                            {
+                                                ShowBusy();
+                                            }
                                         }
-                                        else
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError)
                                         {
-                                            ShowBusy();
                                         }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError)
-                                    {
-                                    }
-                                });
+                                    });
+                                }
                             }
                         }
 
@@ -224,12 +249,12 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
 
     public void ShowBusy()
     {
-        Toast.makeText(this, "THE USER IS BUSY ON ANOTHER CALL", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "THE USER IS BUSY ON ANOTHER CALL", Toast.LENGTH_SHORT).show();
     }
 
     public void MakeCall(FirebaseCallback fbcb)
     {
-        mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Num_Projects");
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
@@ -240,14 +265,15 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                 for(int i = 1; i <= Integer.parseInt(number); i++)
                 {
                     String num = String.valueOf(i);
-                    mDatabase = FirebaseDatabase.getInstance().getReference();
-                    mDatabase = mDatabase.child("Connections").child("Proj_" + num);
+                    Log.i("LastCheck - HS - Checking ProjID before calling", "Proj_" + num);
+                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Connections").child("Proj_" + num).child("User_1");
                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                     {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot2)
                         {
-                            String check = dataSnapshot.child("User_1").getValue().toString();
+                            String check = dataSnapshot2.getValue().toString();
+                            Log.i("LastCheck - HS - User 1 in proj before calling", check);
                             if(check.equals("None"))
                             {
                                 if(update)
@@ -255,6 +281,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                                     return;
                                 }
                                 update = true;
+                                Log.i("LastCheck - HS - userID before calling and setting in Proj", userID);
                                 mDatabase.getRoot().child("Connections").child("Proj_" + num).child("User_1").setValue(userID);
                                 fbcb.onCallback(Integer.parseInt(num));
                             }
@@ -275,28 +302,6 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
         });
     }
 
-    public void makeCallIntent(int i)
-    {
-        Intent intent = new Intent();
-        intent.setClass(this, MainActivity.class);
-        intent.putExtra("CallFrom", userID);
-        intent.putExtra("CallTo", otherID);
-        intent.putExtra("Proj_ID", "Proj_" + String.valueOf(i));
-        intent.putExtra("UserID", userID);
-        startActivity(intent);
-//        finish();
-    }
-
-    public void getCallIntent(String name)
-    {
-        Intent intent = new Intent(getApplicationContext(), IncomingCall.class);
-        intent.putExtra("CallTo", userID);
-        intent.putExtra("CallerName", name);
-        intent.putExtra("UserID", userID);
-        startActivity(intent);
-//        finish();
-    }
-
     private interface FirebaseCallback
     {
         void onCallback(int i);
@@ -304,21 +309,45 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
 
     public void updateRecievingCall(FirebaseCallback2 fbcb2)
     {
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User");
-        mDatabase.addValueEventListener(new ValueEventListener()
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable()
         {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            public void run()
             {
-                String callFrom = dataSnapshot.child(userID).getValue().toString();
-                fbcb2.onCallback(callFrom);
-            }
+                Log.i("LastCheck - HS - Not Receiving in URC", String.valueOf(notReceiving));
+                if(notReceiving)
+                {
+                    Log.i("LastCheck - HS - User ID in URC", userID);
+                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
+                    {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        {
+                            String callFrom = dataSnapshot.getValue().toString();
+                            Log.i("LastCheck - HS - Call from in URC", callFrom);
+                            if(!callFrom.equals("None"))
+                            {
+                                notReceiving = false;
+                                fbcb2.onCallback(callFrom);
+                            }
+                        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError)
+                        {
+                        }
+                    });
+                    handler.postDelayed(this, 1500);
+                }
+                else
+                {
+                    handler.removeCallbacks(this);
+                }
             }
-        });
+        };
+        handler.postDelayed(runnable, 1500);
     }
 
     private interface FirebaseCallback2
@@ -334,7 +363,9 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
+                Log.i("LastCheck - HS - Caller ID in getCallerName", s);
                 String name = dataSnapshot.child(s).child("Username").getValue().toString();
+                Log.i("LastCheck - HS - Caller name in getCallerName", name);
                 fbcb3.onCallback(name);
             }
 
@@ -353,18 +384,72 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
 
     public void goToDiscoverFriends(View view)
     {
-        Intent intent = new Intent(getApplicationContext(), SendRequestScreen.class);
-        intent.putExtra("UserID", userID);
-        startActivity(intent);
-        finish();
+        if(!alreadyReceived)
+        {
+            Log.i("LastCheck - HS - userID before goToDiscoverFriends", userID);
+            Log.i("LastCheck - HS - Not receiving before goToDiscoverFriends", String.valueOf(notReceiving));
+            notReceiving = false;
+            alreadyReceived = true;
+            Intent intent = new Intent(getApplicationContext(), SendRequestScreen.class);
+            intent.putExtra("UserID", userID);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void goToAddFriends(View view)
     {
-        Intent intent = new Intent(getApplicationContext(), AcceptRequestScreen.class);
-        intent.putExtra("UserID", userID);
-        startActivity(intent);
-        finish();
+        if(!alreadyReceived)
+        {
+            Log.i("LastCheck - HS - userID before goToAddFriends", userID);
+            Log.i("LastCheck - HS - Not receiving before goToAddFriends", String.valueOf(notReceiving));
+            notReceiving = false;
+            alreadyReceived = true;
+            Intent intent = new Intent(getApplicationContext(), AcceptRequestScreen.class);
+            intent.putExtra("UserID", userID);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    public void makeCallIntent(int i)
+    {
+        if(!alreadyReceived)
+        {
+            Log.i("LastCheck - HS - userID before making call", userID);
+            Log.i("LastCheck - HS - otherID before making call", otherID);
+            Log.i("LastCheck - HS - Call from before making call", userID);
+            Log.i("LastCheck - HS - Call to before making call", otherID);
+            Log.i("LastCheck - HS - Proj ID before making call", "Proj_" + String.valueOf(i));
+            Log.i("LastCheck - HS - Not receiving before making Call", String.valueOf(notReceiving));
+            notReceiving = false;
+            alreadyReceived = true;
+            Intent intent = new Intent();
+            intent.setClass(this, MainActivity.class);
+            intent.putExtra("CallFrom", userID);
+            intent.putExtra("CallTo", otherID);
+            intent.putExtra("Proj_ID", "Proj_" + String.valueOf(i));
+            intent.putExtra("UserID", userID);
+            startActivity(intent);
+        }
+    }
+
+    public void getCallIntent(String name)
+    {
+        if(!alreadyReceived)
+        {
+            Log.i("LastCheck - HS - Not receiving in getCallIntent", String.valueOf(notReceiving));
+            Log.i("LastCheck - HS - Call to in getCallIntent", userID);
+            Log.i("LastCheck - HS - User ID in getCallIntent", userID);
+            Log.i("LastCheck - HS - Caller name in getCallIntent", name);
+            alreadyReceived = true;
+            notReceiving = false;
+            Intent intent = new Intent(getApplicationContext(), IncomingCall.class);
+            intent.putExtra("CallTo", userID);
+            intent.putExtra("CallerName", name);
+            intent.putExtra("UserID", userID);
+            startActivity(intent);
+        }
     }
 
     @Override

@@ -37,7 +37,7 @@ public class RegistrationScreen extends AppCompatActivity
         String username = UsernameField.getText().toString().trim();
         String pass = PasswordField.getText().toString().trim();
         if(!(username.equals("") || pass.equals(""))) {
-            mDatabase = mDatabase.child("Users");
+            mDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -60,7 +60,6 @@ public class RegistrationScreen extends AppCompatActivity
                     }
                     else
                     {
-                        Log.i("What happs", "lol");
                         update_db(username, pass, n);
                         Intent intent = new Intent(getApplicationContext(), Login.class);
                         startActivity(intent);

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -37,7 +38,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     private GestureDetector GD;
     private Vibrator vibrator;
     private boolean vibrate;
-    private boolean notReceiving = true;
+    private boolean Receiving;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,10 +47,10 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
         setContentView(R.layout.activity_incoming_call);
         Intent intent = getIntent();
         callerName = intent.getStringExtra("CallerName");
-        ((TextView) findViewById(R.id.incomingCallText)).setText(callerName);
         userID = intent.getStringExtra("UserID");
+        ((TextView) findViewById(R.id.incomingCallText)).setText(callerName);
         otherID = "";
-        notReceiving = true;
+        Receiving = true;
         vibrate = true;
         blackhole = findViewById(R.id.blackhole);
         GD = new GestureDetector(this, this);
@@ -66,6 +67,9 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
         });
         blackhole.start();
         blackhole.setOnTouchListener(this);
+        Log.i("LastCheck - IC - Receiving initially", String.valueOf(Receiving));
+        Log.i("LastCheck - IC - User ID initially", userID);
+        Log.i("LastCheck - IC - Caller Name initially", callerName);
         runAnim();
 
         final Handler handler = new Handler();
@@ -74,18 +78,22 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void run()
             {
-                if(notReceiving)
+                Log.i("LastCheck - IC - Receiving in runnable", String.valueOf(Receiving));
+                Log.i("LastCheck - IC - User ID in runnable", userID);
+                if(Receiving)
                 {
                     mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
-                    mDatabase.addValueEventListener(new ValueEventListener()
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                     {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                         {
                             String check = dataSnapshot.getValue().toString();
+                            Log.i("LastCheck - IC - Receiving call from in runnable", check);
                             if(check.equals("None"))
                             {
-                                notReceiving = false;
+                                Receiving = false;
+                                vibrate = false;
                                 Toast.makeText(getApplicationContext(), "THE CALL WAS DISCONNECTED", Toast.LENGTH_SHORT).show();
                                 rejectCall();
                             }
@@ -159,26 +167,28 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     public void acceptCall(View view)
     {
-        mDatabase = mDatabase.getRoot();
-        mDatabase = mDatabase.child("Recieve_User").child(userID);
+        Log.i("LastCheck - IC - User ID in acceptCall", userID);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 String caller = dataSnapshot.getValue().toString();
+                Log.i("LastCheck - IC - Caller ID in acceptCall", caller);
                 if(!caller.equals("None"))
                 {
                     otherID = caller;
                 }
-                mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
+                Log.i("LastCheck - IC - Other ID in acceptCall", otherID);
+                mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Num_Projects");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                 {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                     {
                         String number = dataSnapshot.getValue().toString();
-                        mDatabase = mDatabase.getRoot().child("Connections");
+                        mDatabase = FirebaseDatabase.getInstance().getReference().child("Connections");
                         mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                         {
                             @Override
@@ -186,10 +196,14 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                             {
                                 for(int i = 1; i <= Integer.parseInt(number); i++)
                                 {
+                                    Log.i("LastCheck - IC - Checking for caller in Proj in acceptCall", "Proj_" + String.valueOf(i));
                                     String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
+                                    Log.i("LastCheck - IC - Caller ID in Proj in acceptCall", check);
                                     if(check.equals(caller))
                                     {
                                         mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue(userID);
+                                        Receiving = false;
+                                        vibrate = false;
                                         connectCall(i);
                                         break;
                                     }
@@ -219,24 +233,29 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     public void declineCall(View view)
     {
-        mDatabase = mDatabase.getRoot().child("Recieve_User").child(userID);
+        Log.i("LastCheck - IC - Receiving in declineCall", String.valueOf(Receiving));
+        Log.i("LastCheck - IC - User ID in declineCall", userID);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Recieve_User").child(userID);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
                 String callFrom = dataSnapshot.getValue().toString();
+                Log.i("LastCheck - IC - Call From in declineCall", callFrom);
                 if(!callFrom.equals("None"))
                 {
                     mDatabase.getRoot().child("Call_User").child(callFrom).setValue("None");
-                    mDatabase = mDatabase.getRoot().child("Users").child("Num_Projects");
+                    Receiving = false;
+                    vibrate = false;
+                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Num_Projects");
                     mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                     {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                         {
                             String number = dataSnapshot.getValue().toString();
-                            mDatabase = mDatabase.getRoot().child("Connections");
+                            mDatabase = FirebaseDatabase.getInstance().getReference().child("Connections");
                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener()
                             {
                                 @Override
@@ -244,9 +263,13 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                                 {
                                     for(int i = 1; i <= Integer.parseInt(number); i++)
                                     {
+                                        Log.i("LastCheck - IC - Checking for caller in Proj in declineCall", "Proj_" + String.valueOf(i));
                                         String check = dataSnapshot.child("Proj_" + String.valueOf(i)).child("User_1").getValue().toString();
+                                        Log.i("LastCheck - IC - Caller ID in Proj in declineCall", check);
                                         if(check.equals(callFrom))
                                         {
+                                            Receiving = false;
+                                            vibrate = false;
                                             mDatabase.child("Proj_" + String.valueOf(i)).child("User_1").setValue("None");
                                             mDatabase.child("Proj_" + String.valueOf(i)).child("User_2").setValue("None");
                                             mDatabase.getRoot().child("Recieve_User").child(userID).setValue("None");
@@ -281,8 +304,8 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     public void runAnim()
     {
-        Button Accept_Button = findViewById(R.id.button3);
-        Button Decline_Button = findViewById(R.id.button4);
+        Button Accept_Button = findViewById(R.id.pickCallButton);
+        Button Decline_Button = findViewById(R.id.declineCallButton);
         AlphaAnimation AN1 = new AlphaAnimation(1f, 0.1f);
         AN1.setDuration(550);
         AN1.setStartOffset(250);
@@ -298,7 +321,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     public void connectCall(int i)
     {
-        notReceiving = false;
+        Receiving = false;
         vibrate = false;
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("CallTo", userID);
@@ -311,7 +334,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
     public void rejectCall()
     {
-        notReceiving = false;
+        Receiving = false;
         vibrate = false;
         finish();
     }
@@ -319,7 +342,6 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent)
     {
-
         if(view.getId() == R.id.blackhole)
         {
             GD.onTouchEvent(motionEvent);
@@ -369,12 +391,12 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
     {
         if(v > 30)
         {
-            Button X = findViewById(R.id.button3);
+            Button X = findViewById(R.id.pickCallButton);
             X.performClick();
         }
         else if(v < -30)
         {
-            Button X = findViewById(R.id.button4);
+            Button X = findViewById(R.id.declineCallButton);
             X.performClick();
         }
         return true;

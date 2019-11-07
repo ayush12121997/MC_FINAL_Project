@@ -87,6 +87,11 @@ public class mFragment extends Fragment {
         FrameLayout mSubContainer = view.findViewById(R.id.subscriber_container);
         FrameLayout mPubContainer = view.findViewById(R.id.publisher_container);
         Log.d("fragment","onViewCreated, config "+configuration);
+        if(!((MainActivity)getActivity()).isCaller())
+        {
+            frameLayout2.findViewById(R.id.canvasSubClient).setScaleX(-1);
+            frameLayout2.findViewById(R.id.canvasSubServer).setScaleX(-1);
+        }
         frameLayout2.setOnClickListener(v->{
             if(configuration==-1)
             {

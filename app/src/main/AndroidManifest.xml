@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mcfinalproject">
 
-    <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,31 +9,45 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SendRequestScreen" android:screenOrientation="portrait">
-
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <activity
+            android:name=".SendRequestScreen"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".AcceptRequestScreen" android:screenOrientation="portrait" />
-        <activity android:name=".IncomingCall" android:screenOrientation="portrait">
-
+        <activity
+            android:name=".AcceptRequestScreen"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".IncomingCall"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".RegistrationScreen" android:screenOrientation="portrait"/>
-        <activity android:name=".Login" android:screenOrientation="portrait">
+        <activity
+            android:name=".RegistrationScreen"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Login"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".HomeScreen" android:screenOrientation="portrait">
-
-    </activity>
-        <activity android:name=".MainActivity" android:screenOrientation="portrait">
+        <activity
+            android:name=".HomeScreen"
+            android:screenOrientation="portrait">
         </activity>
-
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"></activity>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
 </manifest>
