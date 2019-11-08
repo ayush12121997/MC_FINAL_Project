@@ -339,7 +339,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                         {
                         }
                     });
-                    handler.postDelayed(this, 1500);
+                    handler.postDelayed(this, 750);
                 }
                 else
                 {
@@ -347,7 +347,7 @@ public class HomeScreen extends AppCompatActivity implements AdapterView.OnItemC
                 }
             }
         };
-        handler.postDelayed(runnable, 1500);
+        handler.postDelayed(runnable, 750);
     }
 
     private interface FirebaseCallback2

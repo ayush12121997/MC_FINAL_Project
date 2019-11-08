@@ -105,7 +105,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
 
                         }
                     });
-                    handler.postDelayed(this, 1500);
+                    handler.postDelayed(this, 750);
                 }
                 else
                 {
@@ -113,7 +113,7 @@ public class IncomingCall extends AppCompatActivity implements View.OnTouchListe
                 }
             }
         };
-        handler.postDelayed(runnable, 1500);
+        handler.postDelayed(runnable, 750);
 
         if(Build.VERSION.SDK_INT >= 26)
         {

@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
 
                         }
                     });
-                    handler.postDelayed(this, 1500);
+                    handler.postDelayed(this, 750);
                 }
                 else
                 {
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 }
             }
         };
-        handler.postDelayed(runnable, 1500);
+        handler.postDelayed(runnable, 750);
     }
 
     @Override
@@ -579,7 +579,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                             }
                         });
                     }
-                    handler.postDelayed(this, 1000);
+                    handler.postDelayed(this, 750);
                 }
                 else
                 {
@@ -587,7 +587,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 }
             }
         };
-        handler.postDelayed(runnable, 1000);
+        handler.postDelayed(runnable, 750);
     }
 
     public void getDrawingPub(FirebaseCallback2 fbcb2)
@@ -672,7 +672,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                             }
                         });
                     }
-                    handler.postDelayed(this, 1000);
+                    handler.postDelayed(this, 750);
                 }
                 else
                 {
@@ -680,7 +680,7 @@ public class MainActivity extends AppCompatActivity implements Session.SessionLi
                 }
             }
         };
-        handler.postDelayed(runnable, 1000);
+        handler.postDelayed(runnable, 750);
     }
 
     private interface FirebaseCallback2
